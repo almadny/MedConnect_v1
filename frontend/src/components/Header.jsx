@@ -65,7 +65,7 @@ function Header() {
                   <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 hover:bg-cyan-600  border-cyan-200  md:hover:text-cyan-600  md:hover:bg-transparent">
                     <a
                       className='lg:px-4 lg:py-2 rounded-md ml-8'
-                      href=''
+                      href='/Login'
                       onClick={() => setNavBar(!navBar)}
                     >
                       Log In
@@ -74,7 +74,7 @@ function Header() {
                   <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 hover:bg-cyan-600  border-cyan-200  md:hover:text-cyan-600 md:hover:bg-transparent">
                     <a
                       className='lg:border-2 lg:border-cyan-600 lg:px-4 lg:py-2 rounded-md ml-8'
-                      href=''
+                      href='/PSignUp'
                       onClick={() => setNavBar(!navBar)}
                     >
                       Sign Up

@@ -58,6 +58,9 @@ const PatientSignUp = () => {
           <div className='border-2 border-slate-500 rounded w-full my-5 py-2 bg-slate-500 text-slate-100 shadow-lg hover:shadow-slate-600 font-semibold'>
             <input onClick={handleSignUp} className='cursor-pointer w-full mx-auto' type="submit" value="Sign Up"/>
           </div>
+          <div>
+            <p>Want to register a hospital instead? <a href='/HSignUp'>Click here</a></p>
+          </div>
         </form>
       </div>
     </div>
