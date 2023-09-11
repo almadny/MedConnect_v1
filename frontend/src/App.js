@@ -1,4 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
+import Blog from './pages/Blog/Blog';
+import FindHospital from './pages/FindHospital/FindHospital';
 import Home from "./pages/Homepage/Home";
 import Login from './pages/Login/Login';
 import HospitalSignUp from './pages/SignUp/HospitalSignUp';
@@ -13,6 +15,8 @@ function App() {
           <Route path='PSignUp' element={<PatientSignUp/>} />
           <Route path='HSignUp' element={<HospitalSignUp/>} />
           <Route path='Login' element={<Login/>} />
+          <Route path='Blog' element={<Blog/>} />
+          <Route path='FindHospital' element={<FindHospital/>} />
         </Route>
       </Routes>
     </div>
