@@ -7,26 +7,26 @@ const Footer = () => {
       <div className='flex justify-center py-10'>
         <Logo />
       </div>
-      <div className='grid grid-cols-4 pb-10'>
-        <div className='mx-auto'>
+      <div className='grid md:grid-cols-4 grid-cols-2 pb-10'>
+        <div className='mx-auto pb-6'>
           <p className='font-bold'>Company</p>
           <p>About us</p>
         </div>
-        <div className='mx-auto'>
+        <div className='mx-auto pb-6'>
           <p className='font-bold'>Resources</p>
           <p>FAQs</p>
           <p>Blog</p>
         </div>
-        <div className='mx-auto'>
+        <div className='mx-auto pb-6'>
           <p className='font-bold'>Legal</p>
           <p>Privacy policy</p>
           <p>Terms of use</p>
           <p>Cookie Policy</p>
         </div>
-        <div className='mx-auto'>
+        <div className='mx-auto pb-6'>
           <p className='font-bold'>Contact</p>
           <p>About us</p>
-          <p>info@medconnect.org</p>
+          {/* <p>info@medconnect.org</p> */}
         </div>
       </div>
     </div>

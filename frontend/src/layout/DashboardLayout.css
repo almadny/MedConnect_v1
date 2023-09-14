@@ -1,0 +1,88 @@
+.dahboardfull {
+  display: flex;
+}
+
+header {
+  display: none;
+}
+
+.dahboardfull > nav.side {
+  max-height: 100vh;
+  overflow-y: scroll;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 30%;
+}
+
+.dahboardfull > nav.side::-webkit-scrollbar {
+  width: 8px;
+}
+
+nav.side::-webkit-scrollbar-thumb {
+  background-color: #2B5C53;
+  border-radius: 16px;
+}
+
+.dahboardfull > main {
+  width: 70%;
+  margin-left: auto;
+}
+
+@media (max-width: 850px) {
+  .dahboardfull > main {
+      width: 67.5%;
+      margin-left: auto;
+  }
+  .dahboardfull>nav.side {
+      width: 33.5%;
+  }
+}
+
+@media (min-width: 641px) {
+  nav.side {
+      transform: translateX(0%) !important;
+  }
+  nav.side.mobile {
+      display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  header {
+      grid-column: unset !important;
+      display: flex;
+  }
+  .dahboardfull {
+      display: flex !important;
+      flex-direction: column;
+  }
+  nav.side {
+      display: none !important;
+  }
+  .dahboardfull > main {
+      width: 100%;
+      margin-left: auto;
+  }
+  nav.side.mobile {
+      display: flex !important;
+      position: absolute;
+      top: 68px;
+      left: 0;
+      width: 75% !important;
+      transition: all ease-in-out 500ms;
+  }
+  .ham img {
+      width: 2rem !important;
+  }
+  nav.side.mobile>aside>a {
+      display: flex !important;
+  }
+}
+
+@media (max-width: 450px) {
+  nav.side.mobile {
+      width: 90% !important;
+  }
+}

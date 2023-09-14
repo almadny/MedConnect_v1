@@ -5,10 +5,11 @@ import Logo from "./Logo";
 
 function Header() {
   const [navBar, setNavBar] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <main>
-        <nav  className={`w-full border-b bg-white fixed top-0 left-0 right-0 z-50`}>
+        <nav  className={`w-full bg-white fixed top-0 left-0 right-0 z-50`}>
           <div className="justify-between px-10 md:mx-auto md:max-w-8xl items-center md:flex">
             <div className="flex items-center justify-between py-3 md:py-6 md:block">
               <a href="/">
@@ -62,23 +63,32 @@ function Header() {
                       FAQs
                     </a>
                   </li>
-                  <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 hover:bg-cyan-600  border-cyan-200  md:hover:text-cyan-600  md:hover:bg-transparent">
-                    <a
-                      href='/Login'
-                      onClick={() => setNavBar(!navBar)}
-                    >
-                      Log In
-                    </a>
-                  </li>
-                  <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 hover:bg-cyan-600  border-cyan-200  md:hover:text-cyan-600 md:hover:bg-transparent">
-                    <a
-                      className='lg:border-2 lg:border-cyan-600 lg:px-4 lg:py-2 rounded-md'
-                      href='/PSignUp'
-                      onClick={() => setNavBar(!navBar)}
-                    >
-                      Sign Up
-                    </a>
-                  </li>
+                  {isLoggedIn ? (
+                  <>
+                    <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 hover:bg-cyan-600 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
+                      <a href="/patient_dashboard" onClick={() => setNavBar(!navBar)}>
+                        Dashboard
+                      </a>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 hover:bg-cyan-600 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
+                      <a href="/Login" onClick={() => setNavBar(!navBar)}>
+                        Log In
+                      </a>
+                    </li>
+                    <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 hover:bg-cyan-600 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
+                      <a
+                        className="lg:border-2 lg:border-cyan-600 lg:px-4 lg:py-2 rounded-md"
+                        href="/PSignUp"
+                        onClick={() => setNavBar(!navBar)}
+                      >
+                        Sign Up
+                      </a>
+                    </li>
+                  </>
+                )}
                 </ul>
               </div>
             </div>
