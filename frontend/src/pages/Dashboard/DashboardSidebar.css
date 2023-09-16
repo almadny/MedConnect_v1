@@ -1,0 +1,121 @@
+.logo-box {
+  border-bottom: 2px solid #2B5C53;
+}
+
+.logo-box img {
+  width: clamp(60%, 70%, 80%);
+}
+
+.dashlink, .dashlink:hover {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 28px;
+  padding: 16px 20%;
+  color: #AAAAAA;
+  transition: all 0.5s ease-in-out;
+  text-decoration: none;
+}
+
+button.dashlink {
+  background-color: transparent;
+}
+
+button.dashlink:focus {
+  background-color: #2B5C53 !important;
+  color: #fcfcfc;
+}
+
+button.dashlink:focus img svg {
+  fill: white;
+}
+
+.dashlink span, .dashlink:hover span {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.dashlink.active {
+  background-color: #2B5C53;
+  color: #fcfcfc;
+}
+
+.dashlink.active img svg {
+  fill: white;
+}
+
+nav > div:first-child {
+  border-bottom: 2px solid #2B5C53;
+  padding-bottom: 24px;
+}
+
+.dashprofileBox {
+  background-color: #f2f2f2;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+aside div h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+}
+
+aside div p {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #cccccc;
+}
+
+aside > div:nth-child(2) {
+  border-bottom: 2px solid #2B5C53;
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .dashlink,
+  .dashlink:hover {
+      padding: 16px 15%;
+      gap: 1.5rem;
+  }
+  .dashlink span,
+  .dashlink:hover span {
+      font-size: 1.35rem;
+  }
+  .dashprofileBox {
+      width: 110px;
+      height: 110px;
+  }
+}
+
+@media (max-width: 768px) and (min-width: 641px) {
+  .dashlink, .dashlink:hover {
+      padding: 12px 5% 12px 10%;
+      gap: 1.25rem;
+  }
+  .dashlink span,
+  .dashlink:hover span {
+      font-size: 1.25rem;
+  }
+  .dashprofileBox label {
+      padding: 2px !important;
+  }
+  .dashprofileBox label svg {
+      size: 24px;
+  }
+  .dashprofileBox+h2 {
+      font-size: 1.3rem;
+  }
+  section>nav>aside>nav {
+      gap: 36px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  #root>div>section>nav>aside>a {
+      display: none;
+  }
+}
