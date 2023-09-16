@@ -3,12 +3,12 @@ import { NavLink } from 'react-router-dom';
 import Logo from '../../components/Logo';
 
 const NavData = [
-    { name: 'Find a Doctor', link: '/find_a_doctor' },
-    { name: 'Appointments', link: '/appointment' },
+    { name: 'Add Doctor', link: '/hospital_dashboard/add_doctor' },
+    { name: 'View Doctor List', link: '/hospital_dashboard/view' },
     { name: 'Logout', link: '/logout'}
 ];
 
-const DashboardSidebar = () => {
+const HospitalSidebar = () => {
 
     return (
         <aside className="flex flex-col pt-3 min-h-screen w-full">
@@ -22,7 +22,7 @@ const DashboardSidebar = () => {
                             <NavLink
                                 key={index}
                                 to={link}
-                                end={link === "/patient_dashboard" && true}
+                                end={link === "/hospital_dashboard" && true}
                                 activeClassName="text-blue-500"
                                 className="text-slate-100 hover:text-blue-500 py-6 px-20 border-t-2"
                             >
@@ -45,4 +45,4 @@ const DashboardSidebar = () => {
     );
 };
 
-export default DashboardSidebar;
+export default HospitalSidebar;

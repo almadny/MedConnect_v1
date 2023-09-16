@@ -2,10 +2,11 @@ import { useState } from "react";
 import {GiHamburgerMenu} from 'react-icons/gi';
 import {MdClose} from 'react-icons/md';
 import Logo from "./Logo";
+import {useAuth} from "../context/UseAuth"
 
 function Header() {
   const [navBar, setNavBar] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const {isLoggedIn, account} = useAuth()
 
   return (
     <main>
@@ -65,20 +66,34 @@ function Header() {
                   </li>
                   {isLoggedIn ? (
                   <>
-                    <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 hover:bg-cyan-600 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
-                      <a href="/patient_dashboard" onClick={() => setNavBar(!navBar)}>
-                        Dashboard
-                      </a>
-                    </li>
+                    {account === "patient" ? (
+                      <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
+                        <a href="/patient_dashboard" onClick={() => setNavBar(!navBar)}>
+                          Patient Dashboard
+                        </a>
+                      </li>
+                    ) : account === "doctor" ? (
+                      <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
+                        <a href="/doctor_dashboard" onClick={() => setNavBar(!navBar)}>
+                          Doctor Dashboard
+                        </a>
+                      </li>
+                    ) : account === "hospital" (
+                      <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
+                        <a href="/admin_dashboard" onClick={() => setNavBar(!navBar)}>
+                          Hospital Dashboard
+                        </a>
+                      </li>
+                    )}
                   </>
                 ) : (
                   <>
-                    <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 hover:bg-cyan-600 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
+                    <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
                       <a href="/Login" onClick={() => setNavBar(!navBar)}>
                         Log In
                       </a>
                     </li>
-                    <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 hover:bg-cyan-600 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
+                    <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
                       <a
                         className="lg:border-2 lg:border-cyan-600 lg:px-4 lg:py-2 rounded-md"
                         href="/PSignUp"

@@ -1,16 +1,35 @@
 import React, { useState } from 'react'
 import Logo from '../../components/Logo'
 import LoginImg from '../../assets/Login-image.jpg'
+import { useAuth } from '../../context/UseAuth'
 
 const Login = () => {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const { login} = useAuth();
 
-  const handleSignIn = () => {
-    let data = {email, password}
-    console.log(data)
-  }
+  const handleSignIn = async () => {
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: 'your-email', password: 'your-password' }),
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        login(userData);
+      } else {
+        console.error('Login failed');
+      }
+    } catch (error) {
+      console.error('An error occurred during login:', error);
+    }
+  };
+
 
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 h-screen w-full'>
