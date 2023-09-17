@@ -6,6 +6,8 @@ import {GiHamburgerMenu} from 'react-icons/gi';
 
 const DashboardLayout = () => {
     const [navOpen, setNavOpen] = useState(false);
+    const showDate = new Date();
+    const displayTodaysDate = showDate.toDateString();
 
     return (
         <section className="md:flex min-h-screen">
@@ -24,7 +26,19 @@ const DashboardLayout = () => {
                 {navOpen && <DashboardSidebar />}
             </div>
             <main className="flex-1">
-                <div>Hello World!</div>
+                <section className='border-b-2 p-4'>
+                    <div className="flex justify-between items-start">
+                        <div className="">
+                            <h1 className='md:text-4xl font-bold'>Welcome,<br/> Abdulsamad Raji</h1>
+                            <div className='md:text-xl'>
+                                <p>{displayTodaysDate}</p>
+                            </div>
+                        </div>
+                        {/* <div className="icon">
+                        <NotificationBell />
+                        </div> */}
+                    </div>
+                </section>
                 <Outlet />
             </main>
         </section>
