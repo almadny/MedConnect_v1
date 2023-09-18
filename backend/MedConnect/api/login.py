@@ -36,8 +36,6 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        access_token = create_access_token(identity=username)
-        *return jsonify(access_token=access_token)
         return jsonify({"message": "User registered successfully"}), 201
     except Exception:
         db.session.rollback()
@@ -52,18 +50,8 @@ def login():
 
     """ Check if the user exists in the database"""
     user = User.query.filter_by(username=username).first()
-    if user and check_password_hash(user.password, password):
+    if user and check_password_hash(user.hashed_password, password):
         access_token = create_access_token(identity=username)
-        *return jsonify(access_token=access_token)
-        return jsonify({"message": "Login successful"}), 200
-    else:
+        return jsonify({"access_token": access_token}), 200
         # 401 Unauthorized
-        return jsonify({"message": "Invalid username or password"}), 401
-
-
-@app.route("/protected", methods=["GET"])
-@jwt_required()
-def protected():
-    current_user = get_jwt_identity()
-    return jsonify(logged_in_as=current_user), 200
-
+    return jsonify({"message": "Invalid username or password"}), 401
