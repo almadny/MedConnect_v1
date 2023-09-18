@@ -1,4 +1,4 @@
-from app import db
+from api import db
 from datetime import datetime
 
 class Healthcares(db.Model):

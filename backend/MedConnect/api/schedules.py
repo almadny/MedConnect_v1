@@ -1,4 +1,4 @@
-from app import db
+from api import db
 
 class TimeSlots(db.Model):
     __tablename__ = 'timeslots'
