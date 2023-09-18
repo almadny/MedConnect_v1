@@ -15,7 +15,6 @@ class Doctors(db.Model):
     specialty = db.Column(db.String(20), nullable=True)
     hashed_password = db.Column(db.String(64), nullable=False, default='all_password')
     # confirm_password = db.Column(db.String(64), nullable=False, default='all_password')
-    from api.healthcares import Healthcares
     healthcare_id = db.Column(db.Integer, db.ForeignKey('healthcares.id'), nullable=False)
     timeslots = db.relationship('TimeSlots', backref='doctors', lazy=True)
     dr_appointments = db.relationship('Appointments', backref='doctors', lazy=True)
