@@ -1,16 +1,18 @@
+"""
+This file contains routes for the main application
+"""
 from flask import Blueprint, jsonify
-from api.patients import Patients
-from api.doctors import Doctors
+from api.models import Patients, Doctors
 
 main = Blueprint('main', __name__)
 
 all_users = {'Patients': Patients, 'Doctors': Doctors}
 
-def is_user(email):
+def is_user(email: str) -> bool:
     for user in all_users.values():
         real = user.query.filter_by(email=email).first()
         if real:
-            return True, user
+            return True
         return False
 
 

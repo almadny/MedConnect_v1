@@ -1,24 +1,12 @@
 from api import db
 from flask import Blueprint, jsonify, abort
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from api.models import Posts
 
-posts = Blueprint('posts', __name__)
+blog = Blueprint('blog', __name__)
 
-class Posts(db.Model):
-    __tablename__ = 'posts'
-    id = db.Column(db.Integer, primary_key=True)
-    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False)
-    title = db.Column(db.String(30), nullable=False)
-    category = db.Column(db.String(15), nullable=True, index=True)
-    content = db.Column(db.Text, nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    def __repr__(self):
-        """ Defines the appointment object string representation """
-        return f"Post('{self.id}': '{self.title}' '{self.category}' '{self.date_posted}')"
-
-
-
-@posts.route('post/<int:post_id>', strict_slashes=False)
+@jwt_required
+@blog.route('/post/<int:post_id>', strict_slashes=False)
 def post(post_id):
     # get user with id
     post = Posts.query.get(posts_id)
@@ -26,15 +14,16 @@ def post(post_id):
         return jsonify(post), 200
     abort(404)
 
-@posts.route('/posts/', strict_slashes=False)
+@jwt_required
+@blog.route('/posts/', strict_slashes=False)
 def all_posts():
     # get all posts from db
     posts = Posts.query.all()
     if posts:
         return jsonify(posts)
 
-
-@posts.route("/posts/<int:id>", methods=["POST"])
+@jwt_required
+@blog.route("/posts/<int:id>", methods=["POST"])
 def create_posts():
     data = request.get_json()
     doctor_id = data.get('doctor_id')
@@ -50,8 +39,8 @@ def create_posts():
 
     return jsonify({'message': 'Health advice post added successfully'}), 201
 
-
-@posts.route("/posts/<int:id>", methods=["PUT"])
+@jwt_required
+@blog.route("/posts/<int:id>", methods=["PUT"])
 def update_post(post_id):
     post = Posts.query.get(id)
     if not post:
@@ -64,7 +53,8 @@ def update_post(post_id):
 
     return jsonify({'message': 'Health advice post updated successfully'}), 200  
 
-@posts.route("/posts/<int:id>", methods=["DELETE"])
+@jwt_required
+@blog.route("/posts/<int:id>", methods=["DELETE"])
 def delete_post(post_id):
     post = Posts.query.get(id)
     if not post:
@@ -72,3 +62,4 @@ def delete_post(post_id):
     
     db.session.delete(post)
     db.session.commit()
+

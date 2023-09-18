@@ -13,18 +13,27 @@ def create_app(config_name=Config):
     app.config.from_object(config_name)
 
     db.init_app(app)
-    jwt.init_app(jwt)
+    jwt.init_app(app)
 
     from api.errors import error
-    app.register_blueprint(error, url_prefix='/api')
+    app.register_blueprint(error, url_prefix='/api/error')
 
-    from api.index import main
-    app.register_blueprint(main, url_prefix='/api')
+    from api.main import main
+    app.register_blueprint(main, url_prefix='/api/main')
 
-    from api.doctors import doctors_bp
-    app.register_blueprint(doctors_bp, prefix='/api')
+    from api.users import users_bp
+    app.register_blueprint(users_bp, prefix='/api/users')
 
     from api.auth import auth_bp
     app.register_blueprint(auth_bp, prefix='/api/auth')
+
+    from api.appointments import appt_bp
+    app.register_blueprint(appt_bp, prefix='/api/appt')
+
+    from api.blog import blog
+    app.register_blueprint(blog, prefix='/api/blog')
+
+    from api.medical_records import records_bp
+    app.register_blueprint(records_bp, prefix='/api/records')
 
     return app

@@ -1,23 +1,10 @@
 from api import db
+from flask import Blueprint
+from flask_jwt_extended import jwt_required
 
-class Appointments(db.Model):
-    __tablename__ = 'appointments'
-    id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=False, index=True)
-    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False, index=True)
-    diagnosis = db.relationship('Diagnosis', backref='appointments', uselist=False)
-    date_of_appointment = db.Column(db.Date, nullable=False)
-    status = db.Column(db.String(10), nullable=False, default='Scheduled')
-    notes = db.Column(db.Text, nullable=True)
-    time = db.Column(db.Integer, db.ForeignKey('timeslots.id'), nullable=False)
+appt_bp = Blueprint('appt_bp', __name__)
 
-
-    def __repr__(self):
-        """ Defines the appointment object string representation """
-        return f"Appointment('{self.id}': '{self.doctor_id}' '{self.patient_id}' '{self.status}' '{self.notes}')"
-
-
-@appointments.route("/book_appointment", methods=["POST"])
+@appt_bp.route("/book_appointment", methods=["POST"])
 def book_appointment():
     data = request.get_json()
     patient_id = data.get("patient_id")
@@ -47,19 +34,20 @@ def book_appointment():
     return jsonify({'message': 'Appointment booked successfully'}), 201
 
 
-@appointments.route("/appointment/<int>: id", methods=["PUT"])
+@appt_bp.route("/appointment/<int>: id", methods=["PUT"])
 def update_appointment(appointment_id):
     appointment = Appointments.query.get(id)
     if not appointment:
-        return jsonify({'message': 'Appointment not found'}, 404
-    data = request.get_son()
+        return jsonify({'message': 'Appointment not found'}), 404
+    data = request.get_json()
     appointment.time = data.get('time', appointment.time)
     appointment.doctor = data.get('doctor', appointment.doctor)
 
 
-@appointments.route("/posts/<int:id>", methods=["DELETE"])
+@appt_bp.route("/posts/<int:id>", methods=["DELETE"])
 def delete_post(post_id):
     appointment = Appointments.query.get(id)
     if appointment:
         db.session.delete(appointment)
         db.session.commit()
+
