@@ -1,4 +1,4 @@
-from app import db
+from api import db
 
 class Diagnosis(db.Model):
     __tablename__ = 'diagnosis'

@@ -3,6 +3,7 @@ import Header from '../../components/Header'
 import Hero from '../../assets/AboutImg.jpg'
 import Footer from '../../components/Footer'
 import VC from '../../assets/virtual-consultation.jpg'
+import HowItWorks from '../../components/HowItWorks'
 
 const Home = () => {
   return (
@@ -55,8 +56,20 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section className='my-10'>
-        <p className='text-3xl font-bold flex justify-center'>How it works</p>
+      {/* <section className='my-10 bg-slate-100'>
+        <p className='text-3xl font-bold flex justify-center py-10'>How it works</p>
+        <div className='flex justify-center gap-10'>
+          <div className='after:border-l-4 after:border-cyan-800'>
+            <p className='border-2 border-dashed rounded-full p-2'>01</p>
+          </div>
+          <div className='rounded-md '>
+            <h2>Sign Up</h2>
+            <p>Create an account</p>
+          </div>
+        </div>
+      </section> */}
+      <section>
+        <HowItWorks/>
       </section>
       <Footer />
     </div>

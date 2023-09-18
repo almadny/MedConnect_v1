@@ -17,10 +17,11 @@ class Posts(db.Model):
         return f"Post('{self.id}': '{self.title}' '{self.category}' '{self.date_posted}')"
 
 
-@posts.route('post/<int:id>', strict_slashes=False)
-def post(id):
+
+@posts.route('post/<int:post_id>', strict_slashes=False)
+def post(post_id):
     # get user with id
-    post = Posts.query.filter_by(posts.id=id).first()
+    post = Posts.query.get(posts_id)
     if post:
         return jsonify(post), 200
     abort(404)
@@ -31,6 +32,7 @@ def all_posts():
     posts = Posts.query.all()
     if posts:
         return jsonify(posts)
+
 
 @posts.route("/posts/<int:id>", methods=["POST"])
 def create_posts():

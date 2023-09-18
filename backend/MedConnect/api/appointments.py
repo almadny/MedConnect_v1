@@ -1,9 +1,4 @@
-from app import db
-from diagnosis import Diagnosis
-from flask import 
-
-appointment = Blueprint('appointments', __name__)
-
+from api import db
 
 class Appointments(db.Model):
     __tablename__ = 'appointments'

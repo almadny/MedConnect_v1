@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import HospitalSidebar from '../pages/HospitalDashboard/HospitalSidebar';
+import DrSidebar from '../pages/DrDashboard/DrSidebar';
 import Logo from '../components/Logo';
 import {GiHamburgerMenu} from 'react-icons/gi';
 
-const HospitalLayout = () => {
+const DrLayout = () => {
     const [navOpen, setNavOpen] = useState(false);
     const showDate = new Date();
     const displayTodaysDate = showDate.toDateString();
@@ -20,16 +20,16 @@ const HospitalLayout = () => {
                 </div>
             </header>
             <nav className="hidden md:flex bg-cyan-700 z-10">
-                <HospitalSidebar />
+                <DrSidebar />
             </nav>
             <div className="md:hidden bg-cyan-700">
-                {navOpen && <HospitalSidebar />}
+                {navOpen && <DrSidebar />}
             </div>
             <main className="flex-1">
                 <section className='border-b-2 p-4'>
                     <div className="flex justify-between items-start">
                         <div className="">
-                            <h1 className='md:text-4xl font-bold'>Welcome,<br/> University of Benin Teaching Hospital</h1>
+                            <h1 className='md:text-4xl font-bold'>Welcome,<br/> Dr Aliyu</h1>
                             <div className='md:text-xl'>
                                 <p>{displayTodaysDate}</p>
                             </div>
@@ -45,4 +45,4 @@ const HospitalLayout = () => {
     );
 };
 
-export default HospitalLayout;
+export default DrLayout;
