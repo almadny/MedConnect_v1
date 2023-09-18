@@ -17,7 +17,7 @@ class Posts(db.Model):
         return f"Post('{self.id}': '{self.title}' '{self.category}' '{self.date_posted}')"
 
 
-@post.route('post/<int:id>', strict_slashes=False)
+@posts.route('post/<int:id>', strict_slashes=False)
 def post(id):
     # get user with id
     post = Posts.query.filter_by(posts.id=id).first()
@@ -32,3 +32,41 @@ def all_posts():
     if posts:
         return jsonify(posts)
 
+@posts.route("/posts/<int:id>", methods=["POST"])
+def create_posts():
+    data = request.get_json()
+    doctor_id = data.get('doctor_id')
+    title = data.get('title')
+    content = data.get('content')
+
+    doctor = Doctor.query.get(doctor_id)
+    if not doctor:
+         return jsonify({'message': 'Only doctors can drop health advice'}), 404
+    new_post = Posts(doctor_id=doctor_id, title=title, content=content)
+    db.session.add(new_post)
+    db.session.commit()
+
+    return jsonify({'message': 'Health advice post added successfully'}), 201
+
+
+@posts.route("/posts/<int:id>", methods=["PUT"])
+def update_post(post_id):
+    post = Posts.query.get(id)
+    if not post:
+          return jsonify({'message': 'Health advice post not found'}), 404
+    data = request.get_json()
+    post.title = data.get('title', post.title)
+    post.content = data.get('content', post.content)
+
+    db.session.commit()
+
+    return jsonify({'message': 'Health advice post updated successfully'}), 200  
+
+@posts.route("/posts/<int:id>", methods=["DELETE"])
+def delete_post(post_id):
+    post = Posts.query.get(id)
+    if not post:
+        return jsonify({'message': 'Health advice post not found'}), 404
+    
+    db.session.delete(post)
+    db.session.commit()

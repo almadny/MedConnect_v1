@@ -1,5 +1,9 @@
 from app import db
 from diagnosis import Diagnosis
+from flask import 
+
+appointment = Blueprint('appointments', __name__)
+
 
 class Appointments(db.Model):
     __tablename__ = 'appointments'
@@ -16,3 +20,51 @@ class Appointments(db.Model):
     def __repr__(self):
         """ Defines the appointment object string representation """
         return f"Appointment('{self.id}': '{self.doctor_id}' '{self.patient_id}' '{self.status}' '{self.notes}')"
+
+
+@appointments.route("/book_appointment", methods=["POST"])
+def book_appointment():
+    data = request.get_json()
+    patient_id = data.get("patient_id")
+    doctor_id = data.get("doctor_id")
+    date_of_appointment = data.get("date_of_appointment")
+
+    '''check if doctor has reached max limit'''
+    doctor = Doctor.query.get(doctor_id)
+    week_start = date_of_appointment - timedelta(days=date_of_appointment.weekday())
+    week_end = week_start + timedelta(days=6)
+    weekly_appointment = Appointment.query.filter_by(doctor_id=doctor_id).filter(
+        Appointment.date_of_appointment >= week_start,
+        Appointment.date_of_appointment <= week_end
+    ).count()
+
+    if weekly_appointment >= 21:
+        return jsonify({'message': 'Doctor has reached the maximum number of patients for this week'}), 400
+    daily_appointments = Appointment.query.filter_by(doctor_id=doctor_id, date_of_appointment=date_of_appointment).count()
+
+    if daily_appointments >= 3:
+        return jsonify({'message': 'Doctor has reached the max number of patients for today'}), 400
+
+    appointment = Appointment(patient_id=patient_id, doctor_id=doctor_id, date_of_appointment=date_of_appointment, status='Scheduled')
+    db.session.add(appointment)
+    db.session.commit()
+
+    return jsonify({'message': 'Appointment booked successfully'}), 201
+
+
+@appointments.route("/appointment/<int>: id", methods=["PUT"])
+def update_appointment(appointment_id):
+    appointment = Appointments.query.get(id)
+    if not appointment:
+        return jsonify({'message': 'Appointment not found'}, 404
+    data = request.get_son()
+    appointment.time = data.get('time', appointment.time)
+    appointment.doctor = data.get('doctor', appointment.doctor)
+
+
+@appointments.route("/posts/<int:id>", methods=["DELETE"])
+def delete_post(post_id):
+    appointment = Appointments.query.get(id)
+    if appointment:
+        db.session.delete(appointment)
+        db.session.commit()

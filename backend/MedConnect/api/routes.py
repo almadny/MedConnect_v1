@@ -2,11 +2,16 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import Flask, request, jsonify
 from model import Appointment, db, User, Doctor
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
+
 
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///med.db"
 db.init_app(app)
+app.config["JWT_SECRET_KEY"] = "jdccyhnuhuicjkwedyu" 
+jwt = JWTManager(app)
+
 
 
 with app.app_context():
@@ -37,6 +42,9 @@ def register():
     try:
         db.session.add(new_user)
         db.session.commit()
+
+        access_token = create_access_token(identity=username)
+        return jsonify('access_token'=access_token)
         return jsonify({"message": "User registered successfully"}), 201
     except Exception:
         db.session.rollback()
