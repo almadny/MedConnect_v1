@@ -74,7 +74,7 @@ const Schedule = () => {
             value={selectedTime}
             onChange={handleTimeChange}
           />
-          <button onClick={addTimeRange}>Add Time Range</button>
+          <button className='' onClick={addTimeRange}>Add Time</button>
           <ul>
             {selectedRanges.map((range, index) => (
               <li key={index}>
