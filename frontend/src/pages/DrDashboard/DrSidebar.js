@@ -4,6 +4,8 @@ import Logo from '../../components/Logo';
 
 const NavData = [
     { name: 'Schedule', link: '/doctor_dashboard/schedule' },
+    { name: 'Appointments', link: '/doctor_dashboard/appointments' },
+    { name: 'Blog', link: '/doctor_dashboard/dr_blog' },
     { name: 'Logout', link: '/logout'}
 ];
 
