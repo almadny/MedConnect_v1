@@ -14,6 +14,8 @@ import ViewDoctor from './pages/HospitalDashboard/ViewDoctor';
 import HospitalLayout from './layout/HospitalLayout';
 import DrLayout from './layout/DrLayout';
 import Schedule from './pages/DrDashboard/Schedule';
+import DrAppointments from './pages/DrDashboard/DrAppointments';
+import DrBlog from './pages/DrDashboard/DrBlog';
 
 function App() {
 
@@ -37,6 +39,8 @@ function App() {
             </Route>
             <Route path='doctor_dashboard' element={<DrLayout/>}>
               <Route path='schedule' element={<Schedule/>}/>
+              <Route path='appointments' element={<DrAppointments/>}/>
+              <Route path='dr_blog' element={<DrBlog/>}/>
             </Route>
           </Route>
         </Routes>

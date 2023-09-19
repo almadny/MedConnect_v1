@@ -13,7 +13,22 @@ const PatientSignUp = () => {
   const handleSignUp = () => {
     let data = {fname, lname, email, dob, password}
     console.log(data)
-  }
+
+    fetch('/api/users/addpatient', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+      })
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log('Response from fake API:', responseData);
+        })
+      .catch((error) => {
+        console.error('Error sending data:', error);
+      });
+  };
 
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 h-screen w-full'>
