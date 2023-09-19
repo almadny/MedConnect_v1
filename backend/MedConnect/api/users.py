@@ -263,10 +263,9 @@ def getAllDoctors():
     """
     try:
         doctors = Doctors.query.all()
-        all_doctors = []
+        all_doctors = [
 
-        for doctor in doctors:
-            doc = {
+            {
                     'first_name': doctor.first_name,
                     'last_name' : doctor.last_name,
                     'other_name': doctor.other_name,
@@ -276,9 +275,8 @@ def getAllDoctors():
                     'specialty': doctor.specialty,
                     'healthcare_id' : doctor.healthcare_id
             }
-
-            all_doctors.append(doc)
-
+            for doctor in doctors
+                ]
         return jsonify({'doctors' : all_doctors}), 200
     except Exception as e :
         print(e)
