@@ -1,4 +1,4 @@
-from app import db
+from api import db
 from datetime import datetime
 
 class Patients(db.Model):
@@ -11,8 +11,7 @@ class Patients(db.Model):
     gender = db.Column(db.String(6), nullable=False)
     phone_number = db.Column(db.String(11), nullable=False, index=True, unique=True)
     email_address = db.Column(db.String(30), nullable=False, unique=True, index=True)
-    password = db.Column(db.String(64), nullable=False)
-    confirm_password = db.Column(db.String(64), nullable=False)
+    hashed_password = db.Column(db.String(128), nullable=False)
     pat_appointments = db.relationship('Appointments', backref='patients')
     diagnosis = db.relationship('Diagnosis', backref='patients')
 
@@ -41,7 +40,6 @@ class TimeSlots(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     day_of_the_week = db.Column(db.String(10), nullable=False, default='Everyday')
     timeslots_appointment = db.relationship('Appointments', backref='timeslots')
-    # frequency = once, twice, thrice, four times, five times, six times or daily
 
     def __repr__(self):
         """ Defines the available_time object string representation """
@@ -57,8 +55,7 @@ class Doctors(db.Model):
     phone_number = db.Column(db.String(11), nullable=False, index=True, unique=True)
     email_address = db.Column(db.String(30), nullable=False, unique=True, index=True)
     specialty = db.Column(db.String(20), nullable=True)
-    password = db.Column(db.String(64), nullable=False, default='all_password')
-    confirm_password = db.Column(db.String(64), nullable=False, default='all_password')
+    password = db.Column(db.String(128), nullable=False)
     healthcare_id = db.Column(db.Integer, db.ForeignKey('healthcares.id'), nullable=False)
     timeslots = db.relationship('TimeSlots', backref='doctors', lazy=True)
     dr_appointments = db.relationship('Appointments', backref='doctors', lazy=True)

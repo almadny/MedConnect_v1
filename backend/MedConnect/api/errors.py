@@ -15,3 +15,7 @@ def unauthorized(error):
 @error.app_errorhandler(403)
 def forbidden(error):
     return jsonify({'error': 'Forbidden'}), 403
+
+@error.app_errorhandler(500)
+def server_error(error):
+    return jsonify({'error': 'Server error'}), 500
