@@ -4,8 +4,12 @@ from flask_jwt_extended import jwt_required
 
 appt_bp = Blueprint('appt_bp', __name__)
 
+# To Book an Appointment, The following must be done
+# get the timeshedule of the doctors endpoint
+# post a appointment
+
 @appt_bp.route("/book_appointment", methods=["POST"])
-def book_appointment():
+def bookAppointment():
     data = request.get_json()
     patient_id = data.get("patient_id")
     doctor_id = data.get("doctor_id")
