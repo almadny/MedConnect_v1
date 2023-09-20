@@ -68,7 +68,7 @@ def get_patient(id):
             'first_name' : patient.first_name,
             'last_name' : patient.last_name,
             'other_name' : patient.other_name,
-            'email_address' : patient.email_address
+            'email_address' : patient.email_address,
             'phone_number' : patient.phone_number,
             'date_of_birth' : patient.date_of_birth,
             'gender' : patient.gender
@@ -88,7 +88,7 @@ def all_patients():
             'first_name' : patient.first_name,
             'last_name' : patient.last_name,
             'other_name' : patient.other_name,
-            'email_address' : patient.email_address
+            'email_address' : patient.email_address,
             'phone_number' : patient.phone_number,
             'date_of_birth' : patient.date_of_birth,
             'gender' : patient.gender
@@ -128,7 +128,14 @@ def get_doctor(id):
         return (
             jsonify({
                 "id": doctor.id,
-                "first_name": doctor.name,
+                "first_name": doctor.first_name,
+                "last_name": doctor.last_name,
+                "other_name": doctor.other_name,
+                "date_of_birth": doctor.date_of_birth,
+                "gender": doctor.gender,
+                "phone_number": doctor.phone_number,
+                "email_address": doctor.email_address,
+                "hashed_password": doctor.hashed_password,
                 "specialty": doctor.specialty
                 }),
             200
@@ -140,9 +147,16 @@ def get_doctor(id):
 def add_doctor():
     data = request.get_json()
     print(data)
-    name = data.get("name")
+    first_name = data.get("first_name")
+    last_name = data.get("last_name")
+    other_name = data.get("other_name")
+    date_of_birth = data.get("date_of_birth")
+    gender = data.get("gender")
+    phone_nubmer = data.get("phone_number")
+    email_address = data.get("email_address")
+    hashed_password = data.get("hashed_password")
     specialty = data.get("specialty")
-
+    
     new_doctor = Doctors(name=name, specialty=specialty)
 
     try:
@@ -155,12 +169,21 @@ def add_doctor():
 
 
 @users_bp.route("/doctors/<int:id>", methods=["PUT"])
+@jwt_required()
 def update_doctors(id):
     doctor = Doctors.query.get(id)
     if doctor:
         data = request.get_json()
-        doctor.name = data.get("name", doctor.name)
+        doctor.first_name = data.get("first_name", doctor.first_name)
+        doctor.last_name = data.get("last_name", doctor.last_name)
+        doctor.other_name = data.get("other_name", doctor.last_name)
+        doctor.date_of_birth = data.get("date_of_birth", doctor.date_of_birth)
+        doctor.gender = data.get("gender", doctor.gender)
+        doctor.phone_nubmer = data.get("phone_number", doctor.phone_number)
+        doctor.email_address = data.get("email_address", doctor.email_address)
+        doctor.hashed_password = data.get("hashed_password", hashed_password)
         doctor.specialty = data.get("specialty", doctor.specialty)
+
         db.session.commit()
         return jsonify({"message": "Doctor updated successfully"}), 200
     else:
@@ -168,6 +191,7 @@ def update_doctors(id):
 
 
 @users_bp.route("/doctors/<int:id>", methods=["DELETE"])
+@jwt_required()
 def delete_doctor(id):
     doctor = Doctors.query.get(id)
     if doctor:
@@ -178,7 +202,8 @@ def delete_doctor(id):
         return jsonify({"message": "Doctor not found"}), 404
 
 
-@users_bp.route('/doctors', strict_slashes=False)
+@users_bp.route('/doctors', methods=['GET'], strict_slashes=False)
+@jwt_required()
 def get_doctors():
     try:
         doctors = Doctors.query.all()
@@ -202,3 +227,94 @@ def get_doctors():
     except Exception as e :
         print(e)
         abort(500)
+
+
+@users_bp.route("/healthcaret", methods=["POST"], strict_slashes=False)
+def add_health(care):
+    """
+    Register a new patient
+    """
+    try:
+        data = request.get_json()
+        address = data['address']
+        contact_number = data['contact_number']
+
+        if not healthcare:
+            healthcare = Healthcares(
+                    name=name,
+                    address=address,
+                    contact_number=contact_number,
+                    )
+            from api import db
+            db.session.add(healthcare)
+            db.session.commit()
+
+        return jsonify({'status' : 'Healthcare successfully added'}), 200
+
+        return jsonify({'fail': 'Healthcare exists'})
+    except Exception as e:
+        print(e)
+
+
+@users_bp.route("/healthcare/<int:id>", methods=['GET'], strict_slashes=False)
+@jwt_required()
+def get_healthcare(id):
+    """
+    Get a patient from the database
+    """
+    healthcare = Healthcares.query.get(id)
+    if patient:
+        return jsonify({
+            'id': healthcare.id,
+            'name' : healthcare.name,
+            'address' : healthcare.address,
+            'contact_number' : healthcare.contact_number,
+            }), 200
+    return jsonify({'error': 'Healthcare not found'})
+
+
+@users_bp.route("/healthcare", methods=['GET'], strict_slashes=False)
+@jwt_required()
+def all_healthcares():
+    healthcares = Healthcares.query.all()
+    all_healthcares = []
+    if healthcares:
+        for healthcare in healthcares:
+            health = {
+            'id': healthcares.id,
+            'name' : healthcare.name,
+            'address' : healthcare.address,
+            'contact_number' : healthcare.contact_number,
+            }
+            all_patients.append(health)
+    return jsonify({'healthcare': all_healthcares}), 200
+
+@users_bp.route("/update_patients/<int:id>", methods=["PUT"], strict_slashes=False)
+@jwt_required()
+def update_healthcare(id):
+    healthcare = Healthcares.query.get(id)
+    if not healthcare:
+        return jsonify({'msg': 'healthcare does not exist'})
+    try:
+        data = request.get_json()
+        healthcare.name = data['name']
+        healthcare.address = data['address']
+        healthcare.contact_number = data['contact_number']
+
+        from api import db
+        db.session.commit()
+        return jsonify({'status' : 'Healthcare successfully added'}), 200
+    except Exception as e:
+        print(e)
+
+@users_bp.route("/healthcare/<int:id>", methods=["DELETE"])
+@jwt_required()
+def healthcare(id):
+    healthcare = Healthcares.query.get(id)
+    if healthcare:
+        db.session.delete(doctor)
+        db.session.commit()
+        return jsonify({"message": "Doctor removed successfully"}), 200
+    else:
+        return jsonify({"message": "Doctor not found"}), 404
+
