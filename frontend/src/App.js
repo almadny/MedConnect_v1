@@ -16,6 +16,7 @@ import DrLayout from './layout/DrLayout';
 import Schedule from './pages/DrDashboard/Schedule';
 import DrAppointments from './pages/DrDashboard/DrAppointments';
 import DrBlog from './pages/DrDashboard/DrBlog';
+import Room from './pages/DrDashboard/Room';
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
               <Route path='schedule' element={<Schedule/>}/>
               <Route path='appointments' element={<DrAppointments/>}/>
               <Route path='dr_blog' element={<DrBlog/>}/>
+              <Route path='room' element={<Room/>}/>
             </Route>
           </Route>
         </Routes>

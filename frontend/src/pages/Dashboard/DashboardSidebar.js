@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import Logo from '../../components/Logo';
 
 const NavData = [
-    { name: 'Find a Doctor', link: '/patient_dashboard/find_a_doctor' },
+    { name: 'Book Appointment', link: '/patient_dashboard/find_a_doctor' },
     { name: 'Appointments', link: '/patient_dashboard/appointment' },
     { name: 'Logout', link: '/logout'}
 ];
