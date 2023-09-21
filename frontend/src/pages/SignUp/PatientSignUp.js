@@ -23,7 +23,7 @@ const PatientSignUp = () => {
       })
       .then((response) => response.json())
       .then((responseData) => {
-        console.log('Response from fake API:', responseData);
+        console.log('Response from API:', responseData);
         })
       .catch((error) => {
         console.error('Error sending data:', error);
