@@ -2,10 +2,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 
 db = SQLAlchemy()
 jwt = JWTManager()
+cors = CORS()
 
 
 def create_app(config_name=Config):
@@ -14,6 +16,7 @@ def create_app(config_name=Config):
 
     db.init_app(app)
     jwt.init_app(app)
+    cors.init_app(app)
 
     from api.errors import error
     app.register_blueprint(error, url_prefix='/api/error')
@@ -35,5 +38,8 @@ def create_app(config_name=Config):
 
     from api.medical_records import records_bp
     app.register_blueprint(records_bp, url_prefix='/api/records')
+
+    from api.video import video_bp
+    app.register_blueprint(video_bp, url_prefix='/api/videoChat')
 
     return app

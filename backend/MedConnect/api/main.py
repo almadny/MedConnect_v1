@@ -6,14 +6,14 @@ from api.models import Patients, Doctors
 
 main = Blueprint('main', __name__)
 
-all_users = {'Patients': Patients, 'Doctors': Doctors}
+all_users = {'patients': Patients, 'poctors': Doctors}
 
 def is_user(email: str) -> bool:
-    for user in all_users.values():
-        real = user.query.filter_by(email_address=email).first()
+    for user_type, user_value in all_users.items():
+        real = user_value.query.filter_by(email_address=email).first()
         if real:
-            return real
-        return False
+            return [real, user_type]
+    return None
 
 
 @main.route('/', methods=['GET'], strict_slashes=False)
