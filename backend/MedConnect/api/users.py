@@ -11,12 +11,12 @@ from flask import Blueprint, jsonify, abort, request
 from api.main import is_user
 from datetime import datetime, date
 from werkzeug.security import generate_password_hash, check_password_hash
-from api.models import Patients, Doctors
+from api.models import Patients, Doctors, Healthcares
 from flask_jwt_extended import jwt_required
 
 users_bp = Blueprint('users', __name__)
 
-@users_bp.route("/addpatient", methods=["POST"], strict_slashes=False)
+@users_bp.route("/patient", methods=["POST"], strict_slashes=False)
 def register_patient():
     """
     Register a new patient
@@ -24,17 +24,18 @@ def register_patient():
     try:
         data = request.get_json()
         email_address = data['email_address']
-        password = data['hashed_password']
+        hashed_password = data['hashed_password']
         first_name = data['first_name']
         last_name = data['last_name']
         other_name = data['other_name']
         dob_str = data['date_of_birth']
-        date_of_birth = date.fromisoformat(dob_str)
+        date_of_birth = datetime.strptime(dob_str, '%Y-%m-%d').date()
         gender = data['gender']
         phone_number = data['phone_number']
-
-        hashed_password = generate_password_hash(password)
+        
+        
         if not is_user(email_address):
+            hash_password = generate_password_hash(hashed_password)
             patient = Patients(
                     first_name=first_name,
                     last_name=last_name,
@@ -43,16 +44,17 @@ def register_patient():
                     date_of_birth=date_of_birth,
                     gender=gender,
                     phone_number=phone_number,
-                    hashed_password=hashed_password
+                    hashed_password=hash_password
                     )
             from api import db
             db.session.add(patient)
             db.session.commit()
             return jsonify({'status' : 'Patient successfully added'}), 200
 
-        return jsonify({'fail': 'User exists'})
+        return jsonify({'message': 'User already exists'})
     except Exception as e:
         print(e)
+        return jsonify({"status": "Unknown error"}) 
 
 
 @users_bp.route("/patients/<int:id>", strict_slashes=False)
@@ -96,7 +98,7 @@ def all_patients():
             all_patients.append(pat)
     return jsonify({'patients': all_patients}), 200
 
-@users_bp.route("/update_patients/<int:id>", methods=["PUT"], strict_slashes=False)
+@users_bp.route("/patients/<int:id>", methods=["PUT"], strict_slashes=False)
 @jwt_required()
 def update_patient(id):
     patient = Patients.query.get(id)
@@ -104,21 +106,25 @@ def update_patient(id):
         return jsonify({'msg': 'User does not exist'})
     try:
         data = request.get_json()
-        patient.email_address = data['email_address']
-        patient.hashed_password = generate_password_hash(data['hashed_password'])
-        patient.first_name = data['first_name']
-        patient.last_name = data['last_name']
-        patient.other_name = data['other_name']
-        dob_str = data['date_of_birth']
-        patient.date_of_birth = date.fromisoformat(dob_str)
-        patient.gender = data['gender']
-        patient.phone_number = data['phone_number']
+        print(data)
+        patient.email_address = data.get('email_address', patient.email_address)
+        #password = data.get('hashed_password')
+        patient.first_name = data.get('first_name', patient.first_name)
+        patient.last_name = data.get('last_name', patient.last_name)
+        patient.other_name = data.get('other_name', patient.other_name)
+        #dob_str = data.get('date_of_birth', patient.date_of_birth)
+        patient.gender = data.get('gender', patient.gender)
+        patient.phone_number = data.get('phone_number', patient.phone_number)
+        #if password:
+        #patient.hashed_password = generate_password_hash(password)
+        #if dob_str:
+        #patient.date_of_birth = datetime.strptime(dob_str, '%Y-%m-%d').date()
 
-        from api import db
         db.session.commit()
-        return jsonify({'status' : 'Patient successfully added'}), 200
+        return jsonify({'status' : 'Patient successfully updated'}), 200
     except Exception as e:
         print(e)
+        return jsonify({'error': 'An error occurred'}), 500
 
 
 @users_bp.route("/doctors/<int:id>", methods=["GET"])
@@ -150,14 +156,18 @@ def add_doctor():
     first_name = data.get("first_name")
     last_name = data.get("last_name")
     other_name = data.get("other_name")
-    date_of_birth = data.get("date_of_birth")
     gender = data.get("gender")
-    phone_nubmer = data.get("phone_number")
+    phone_number = data.get("phone_number")
     email_address = data.get("email_address")
-    hashed_password = data.get("hashed_password")
+    password = data.get("password")
     specialty = data.get("specialty")
+    healthcare = data.get("healthcare_id")
     
-    new_doctor = Doctors(name=name, specialty=specialty)
+    new_doctor = Doctors(first_name=first_name,
+                          last_name= last_name, email_address=email_address,
+                            other_name=other_name, gender=gender, 
+                            phone_number=phone_number, specialty=specialty, 
+                            password=password, healthcare_id=healthcare)
 
     try:
         db.session.add(new_doctor)
@@ -170,24 +180,26 @@ def add_doctor():
 
 @users_bp.route("/doctors/<int:id>", methods=["PUT"])
 @jwt_required()
-def update_doctors(id):
+def update_doctors(id): 
     doctor = Doctors.query.get(id)
-    if doctor:
+    if not doctor:
+        return jsonify({"message": "Doctor not found"}), 
+    try:
         data = request.get_json()
         doctor.first_name = data.get("first_name", doctor.first_name)
         doctor.last_name = data.get("last_name", doctor.last_name)
         doctor.other_name = data.get("other_name", doctor.last_name)
-        doctor.date_of_birth = data.get("date_of_birth", doctor.date_of_birth)
         doctor.gender = data.get("gender", doctor.gender)
-        doctor.phone_nubmer = data.get("phone_number", doctor.phone_number)
+        doctor.phone_number = data.get("phone_number", doctor.phone_number)
         doctor.email_address = data.get("email_address", doctor.email_address)
-        doctor.hashed_password = data.get("hashed_password", hashed_password)
+        #doctor.password = data.get("password", password)
         doctor.specialty = data.get("specialty", doctor.specialty)
 
         db.session.commit()
         return jsonify({"message": "Doctor updated successfully"}), 200
-    else:
-        return jsonify({"message": "Doctor not found"}), 404
+    except Exception as e:
+        print(e)
+        return jsonify({"message": " an error occured"}), 500
 
 
 @users_bp.route("/doctors/<int:id>", methods=["DELETE"])
@@ -229,41 +241,39 @@ def get_doctors():
         abort(500)
 
 
-@users_bp.route("/healthcaret", methods=["POST"], strict_slashes=False)
-def add_health(care):
+@users_bp.route("/healthcares", methods=["POST"], strict_slashes=False)
+def add_health():
     """
     Register a new patient
     """
     try:
         data = request.get_json()
-        address = data['address']
-        contact_number = data['contact_number']
+        name = data.get("name")
+        address = data.get('address')
+        contact_number = data.get('contact_number')
 
-        if not healthcare:
-            healthcare = Healthcares(
-                    name=name,
-                    address=address,
-                    contact_number=contact_number,
-                    )
-            from api import db
-            db.session.add(healthcare)
-            db.session.commit()
+        existing_healthcare = Healthcares.query.filter_by(name=name).first()
+        if existing_healthcare:
+            return jsonify({"error": "Healthcare entity with the same name already exists"}), 409  # 409 Conflict status
+
+        new_healthcare = Healthcares(name=name, address=address, contact_number=contact_number)
+                             
+        db.session.add(new_healthcare)
+        db.session.commit()
 
         return jsonify({'status' : 'Healthcare successfully added'}), 200
-
-        return jsonify({'fail': 'Healthcare exists'})
     except Exception as e:
         print(e)
+        return jsonify({"message": "an error occured"}), 500
 
-
-@users_bp.route("/healthcare/<int:id>", methods=['GET'], strict_slashes=False)
+@users_bp.route("/healthcares/<int:id>", methods=['GET'], strict_slashes=False)
 @jwt_required()
 def get_healthcare(id):
     """
     Get a patient from the database
     """
     healthcare = Healthcares.query.get(id)
-    if patient:
+    if healthcare:
         return jsonify({
             'id': healthcare.id,
             'name' : healthcare.name,
@@ -273,7 +283,7 @@ def get_healthcare(id):
     return jsonify({'error': 'Healthcare not found'})
 
 
-@users_bp.route("/healthcare", methods=['GET'], strict_slashes=False)
+@users_bp.route("/healthcares", methods=['GET'], strict_slashes=False)
 @jwt_required()
 def all_healthcares():
     healthcares = Healthcares.query.all()
@@ -281,40 +291,40 @@ def all_healthcares():
     if healthcares:
         for healthcare in healthcares:
             health = {
-            'id': healthcares.id,
             'name' : healthcare.name,
             'address' : healthcare.address,
             'contact_number' : healthcare.contact_number,
             }
-            all_patients.append(health)
+            all_healthcares.append(health)
     return jsonify({'healthcare': all_healthcares}), 200
 
-@users_bp.route("/update_patients/<int:id>", methods=["PUT"], strict_slashes=False)
+@users_bp.route("/healthcares/<int:id>", methods=["PUT"], strict_slashes=False)
 @jwt_required()
 def update_healthcare(id):
     healthcare = Healthcares.query.get(id)
     if not healthcare:
-        return jsonify({'msg': 'healthcare does not exist'})
+        return jsonify({'message': 'healthcare does not exist'})
     try:
         data = request.get_json()
-        healthcare.name = data['name']
-        healthcare.address = data['address']
-        healthcare.contact_number = data['contact_number']
+        healthcare.name = data.get('name', healthcare.name)
+        healthcare.address = data.get('address', healthcare.address)
+        healthcare.contact_number = data.get('contact_number', healthcare.contact_number)
 
-        from api import db
         db.session.commit()
         return jsonify({'status' : 'Healthcare successfully added'}), 200
     except Exception as e:
         print(e)
+        return jsonify({"message": "an error occured"})
 
-@users_bp.route("/healthcare/<int:id>", methods=["DELETE"])
+
+@users_bp.route("/healthcares/<int:id>", methods=["DELETE"])
 @jwt_required()
 def healthcare(id):
     healthcare = Healthcares.query.get(id)
     if healthcare:
-        db.session.delete(doctor)
+        db.session.delete(healthcare)
         db.session.commit()
-        return jsonify({"message": "Doctor removed successfully"}), 200
+        return jsonify({"message": "Healthcare removed successfully"}), 200
     else:
-        return jsonify({"message": "Doctor not found"}), 404
+        return jsonify({"message": "Healthcare not found"}), 404
 
