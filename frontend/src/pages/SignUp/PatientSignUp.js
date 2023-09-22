@@ -13,13 +13,24 @@ const PatientSignUp = () => {
   const handleSignUp = () => {
     let data = {fname, lname, email, dob, password}
     console.log(data)
+    console.log(dob)
 
-    fetch('/api/users/addpatient', {
+    fetch('/api/users/patient', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        email_address: email,
+        hashed_password: password,
+        first_name: fname,
+        last_name: lname,
+        other_name: "",
+        dob_str: dob,
+        gender: "",
+        phone_number: "",
+        date_of_birth: dob
+      }),
       })
       .then((response) => response.json())
       .then((responseData) => {

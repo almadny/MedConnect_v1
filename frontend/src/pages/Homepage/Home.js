@@ -35,7 +35,7 @@ const Home = () => {
       </section>
       <section id='services'>
         <div>
-          <h2 className='md:text-3xl font-bold flex justify-center my-10'>Our core sevices</h2>
+          <h2 className='md:text-3xl font-bold flex justify-center my-10'>Our Core Services</h2>
           <div className='grid grid-cols-4 gap-5 max-w-7xl mx-auto mb-10'>
             <div>
               <img src={VC} className='mb-6 rounded-md'/>

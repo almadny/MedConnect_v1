@@ -7,9 +7,10 @@ export const AuthProvider = ({ children }) => {
     const [account, setAccount] = useState("");
 
     const login = async (data) => {
+      
       const account = data.accountType
 
-      localStorage.setItem("jwt-token", data.token);
+      localStorage.setItem("jwt-token", data.access_token);
       localStorage.setItem("account-type", data.accountType);
     
       setIsLoggedIn(true);
