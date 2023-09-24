@@ -32,12 +32,13 @@ const Login = () => {
     
     const data = await response.json()
     login(data)
+    console.log(data)
 
-    const user = data.find((user) => user.email === email)
-    if (user && user.password === password) {
-      localStorage.setItem('authenticated', true);
-      navigate('/Home')
-    }
+    // if (response.status === 200) {
+    //   navigate('/')
+    //   e.preventDefault()
+    // }
+    navigate('/')
   };
 
 
@@ -71,7 +72,7 @@ const Login = () => {
             <p>Forgot password?</p>
           </div>
           <div className='border-2 border-slate-500 rounded w-full my-5 py-2 bg-slate-500 text-slate-100 shadow-lg hover:shadow-slate-600 font-semibold'>
-            <input onClick={handleSignIn} className='cursor-pointer w-full mx-auto' type="submit" value="Sign In"/>
+            <input onClick={(e) => handleSignIn(e.preventDefault())} className='cursor-pointer w-full mx-auto' type="submit" value="Sign In"/>
           </div>
           <div>
             <p>You don't have an account? <a href=''>Sign Up</a></p>

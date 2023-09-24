@@ -66,7 +66,7 @@ function Header() {
                   </li>
                   {isLoggedIn ? (
                   <>
-                    {account === "patient" ? (
+                    {account === "patients" ? (
                       <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
                         <a href="/patient_dashboard" onClick={() => setNavBar(!navBar)}>
                           Patient Dashboard

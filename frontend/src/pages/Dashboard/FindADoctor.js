@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const FindADoctor = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState("09:00");
+  // const [selectedTime, setSelectedTime] = useState("09:00");
   const [doctors] = useState([
     {
       id: 1,
@@ -23,16 +23,18 @@ const FindADoctor = () => {
       specialty: "Dermatology",
     },
   ]);
-  const [availableDoctors, setAvailableDoctors] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [availableDoctors, setAvailableDoctors] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
+    console.log(date)
   };
 
-  const handleTimeChange = (time) => {
-    setSelectedTime(time);
-  };
+  // const handleTimeChange = (time) => {
+  //   setSelectedTime(time);
+  //   console.log(time)
+  // };
 
   const bookAppointment = (doctorId) => {
     // You can implement the booking logic here (e.g., display a confirmation message).
@@ -45,7 +47,7 @@ const FindADoctor = () => {
 
       <div className="mb-4">
         <label htmlFor="date" className="block text-gray-600">
-          Select a Date:
+          Select Prefered Appointment Date:
         </label>
         <input
           type="date"
@@ -55,7 +57,7 @@ const FindADoctor = () => {
         />
       </div>
 
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <label htmlFor="time" className="block text-gray-600">
           Select a Time:
         </label>
@@ -65,14 +67,17 @@ const FindADoctor = () => {
           onChange={(e) => handleTimeChange(e.target.value)}
           className="border border-gray-300 px-2 py-1 rounded"
         />
-      </div>
+      </div> */}
 
       <div>
         <h3 className="text-lg font-semibold mb-2">Available Doctors:</h3>
         <ul>
           {doctors.map((doctor) => (
-            <li key={doctor.id} className="flex justify-between max-w-6xl mx-auto">
-              <p> {doctor.name} - {doctor.hospital} ({doctor.specialty})</p>
+            <li key={doctor.id} className="flex justify-between mb-4 max-w-6xl mx-auto bg-white rounded shadow p-4">
+              <div>
+                <p> {doctor.name} - {doctor.hospital} ({doctor.specialty})</p>
+                <p>2pm - 4pm</p>
+              </div>
               <button
                 onClick={() => bookAppointment(doctor.id)}
                 className="ml-2 bg-blue-500 text-white px-2 py-1 rounded"

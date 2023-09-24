@@ -1,17 +1,34 @@
 import React, { useState } from 'react'
 import Logo from '../../components/Logo'
 import LoginImg from '../../assets/Login-image.jpg'
+import { useNavigate } from 'react-router-dom'
 
-const HospitalSignUp = () => {
+const HospitalSignUp = (e) => {
 
   const [hname, setHname] = useState("")
   const [email, setEmail] = useState("")
   const [add, setAdd] = useState("")
   const [password, setPassword] = useState("")
+  const navigate = useNavigate()
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     let data = {hname, email, add, password}
     console.log(data)
+
+    const apiUrl = '/api/users/healthcares'
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: hname, address: add, email_address: email, password: password }),
+    });
+
+    if (response.status === 200) {
+      navigate('/Login')
+      e.preventDefault()
+    }
   }
 
   return (

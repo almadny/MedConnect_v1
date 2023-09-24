@@ -8,10 +8,10 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (data) => {
       
-      const account = data.accountType
+      const account = data.user_type
 
       localStorage.setItem("jwt-token", data.access_token);
-      localStorage.setItem("account-type", data.accountType);
+      localStorage.setItem("account-type", account);
     
       setIsLoggedIn(true);
       setAccount(account);

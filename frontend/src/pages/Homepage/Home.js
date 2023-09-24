@@ -4,6 +4,9 @@ import Hero from '../../assets/AboutImg.jpg'
 import Footer from '../../components/Footer'
 import VC from '../../assets/virtual-consultation.jpg'
 import HowItWorks from '../../components/HowItWorks'
+import blogImage from '../../assets/blog-image.jpg'
+import map from '../../assets/find-hospital.webp'
+import FAQ from '../../components/FAQ'
 
 const Home = () => {
   return (
@@ -19,12 +22,12 @@ const Home = () => {
             }}
         >
           <div className='px-6'>
-            <div className='py-40 font-bold'>
+            <div className='py-40 font-bold text-white'>
               <p className='pb-3 md:text-5xl'>Empowering Health at Your Fingertips</p>
               <p className='md:text-5xl pb-6'>Experience Care Without Boundaries</p>
               <a href='/PSignUp' className='text-white text-2xl cursor-pointer bg-cyan-600 p-2 rounded-md'>Get Started</a>
             </div>
-            <div className=''>
+            <div className='text-white'>
               <h3 className='lg:text-2xl font-bold mb-2'>Need to find a hospital urgently?</h3>
               <a href='/FindHospital'>
                 <button className='text-white font-bold text-xl cursor-pointer bg-cyan-600 p-2 rounded-md md:mb-32'>Find nearest hospital</button>
@@ -42,11 +45,11 @@ const Home = () => {
               <p>Virtual consultations</p>
             </div>
             <div>
-              <img src={VC} className='mb-6 rounded-md'/>
+              <img src={map} className='mb-6 rounded-md'/>
               <p>Find closest hospital</p>
             </div>
             <div>
-              <img src={VC} className='mb-6 rounded-md' />
+              <img src={blogImage} className='mb-6 rounded-md' />
               <p>Health Information hub</p>
             </div>
             <div>
@@ -56,20 +59,11 @@ const Home = () => {
           </div>
         </div>
       </section>
-      {/* <section className='my-10 bg-slate-100'>
-        <p className='text-3xl font-bold flex justify-center py-10'>How it works</p>
-        <div className='flex justify-center gap-10'>
-          <div className='after:border-l-4 after:border-cyan-800'>
-            <p className='border-2 border-dashed rounded-full p-2'>01</p>
-          </div>
-          <div className='rounded-md '>
-            <h2>Sign Up</h2>
-            <p>Create an account</p>
-          </div>
-        </div>
-      </section> */}
       <section>
         <HowItWorks/>
+      </section>
+      <section>
+        <FAQ />
       </section>
       <Footer />
     </div>

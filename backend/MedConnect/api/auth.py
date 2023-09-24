@@ -20,8 +20,9 @@ def login():
         user_object = user[0]
         if user[0] and check_password_hash(user[0].hashed_password, password):
             additional_claims = {'type': user[1]}
-            access_token = create_access_token(identity=user.id, additional_claims=additional_claims)
-            return jsonify({"access_token": access_token}), 200
+            access_token = create_access_token(identity=user_object.id, additional_claims=additional_claims)
+            return jsonify({"access_token": access_token, 
+            "user_type": user[1]}), 200
             # 401 Unauthorized
         return jsonify({"message": "Invalid username or password"}), 401
     except Exception as e:
@@ -38,4 +39,3 @@ def access_required(access_level):
             return func(*args, **kwargs)
         return wrapper
     return decorator
-

@@ -5,6 +5,7 @@ import Logo from '../../components/Logo';
 const NavData = [
     { name: 'Book Appointment', link: '/patient_dashboard/find_a_doctor' },
     { name: 'Appointments', link: '/patient_dashboard/appointment' },
+    { name: 'Room', link: '/patient_dashboard/patient_room' },
     { name: 'Logout', link: '/logout'}
 ];
 

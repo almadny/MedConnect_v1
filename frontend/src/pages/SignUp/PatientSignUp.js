@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Logo from '../../components/Logo'
 import LoginImg from '../../assets/Login-image.jpg'
+import { useNavigate } from 'react-router-dom'
 
 const PatientSignUp = () => {
 
@@ -9,37 +10,48 @@ const PatientSignUp = () => {
   const [email, setEmail] = useState("")
   const [dob, setDob] = useState("")
   const [password, setPassword] = useState("")
+  const navigate = useNavigate()
 
-  const handleSignUp = () => {
-    let data = {fname, lname, email, dob, password}
-    console.log(data)
-    console.log(dob)
-
-    fetch('/api/users/patient', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email_address: email,
-        hashed_password: password,
-        first_name: fname,
-        last_name: lname,
-        other_name: "",
-        dob_str: dob,
-        gender: "",
-        phone_number: "",
-        date_of_birth: dob
-      }),
-      })
-      .then((response) => response.json())
-      .then((responseData) => {
-        console.log('Response from API:', responseData);
-        })
-      .catch((error) => {
-        console.error('Error sending data:', error);
+  const handleSignUp = async (e) => {
+    let data = { fname, lname, email, dob, password };
+    console.log(data);
+    console.log(dob);
+  
+    try {
+      const response = await fetch('/api/users/patient', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email_address: email,
+          hashed_password: password,
+          first_name: fname,
+          last_name: lname,
+          other_name: '',
+          dob_str: dob,
+          gender: '',
+          phone_number: '',
+          date_of_birth: dob,
+        }),
       });
+
+      if (response.status=== 200) {
+        navigate('/Login')
+        e.preventDefault()
+      }
+  
+      if (!response.ok) {
+        throw new Error('Error sending data');
+      }
+  
+      const responseData = await response.json();
+      console.log('Response from API:', responseData);
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
   };
+  
 
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 h-screen w-full'>
@@ -94,3 +106,4 @@ const PatientSignUp = () => {
 }
 
 export default PatientSignUp
+

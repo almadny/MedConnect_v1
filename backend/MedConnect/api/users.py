@@ -79,7 +79,7 @@ def get_patient(id):
 
 
 @users_bp.route("/patients", strict_slashes=False)
-@jwt_required()
+#@jwt_required()
 def all_patients():
     patients = Patients.query.all()
     all_patients = []
