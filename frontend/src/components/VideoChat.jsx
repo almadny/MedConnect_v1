@@ -8,9 +8,9 @@ const VideoChat = () => {
 
   useEffect(() => {
     const getTokenFromServer = async () => {
-      const response = await fetch('fakeEndpoint');
+      const response = await fetch('/api/video/generateAccessToken');
       const data = await response.json();
-      const token = data.token;
+      const token = String(data.token);
 
       Video.connect(token, {
         name: 'my-room-name',

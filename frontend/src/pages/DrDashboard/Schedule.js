@@ -1,28 +1,34 @@
 import React, { useState } from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
 
 const Schedule = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedDay, setSelectedDay] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+
   const [selectedRanges, setSelectedRanges] = useState([]);
 
-  const handleDateClick = (date) => {
-    setSelectedDate(date);
+  const handleDayClick = (day) => {
+    setSelectedDay(day);
   };
 
-  const handleTimeChange = (e) => {
-    setSelectedTime(e.target.value);
+  const handleStartTimeChange = (e) => {
+    setStartTime(e.target.value);
+  };
+
+  const handleEndTimeChange = (e) => {
+    setEndTime(e.target.value);
   };
 
   const addTimeRange = () => {
-    if (selectedDate && selectedTime) {
+    if (selectedDay && startTime && endTime) {
       const newRange = {
-        date: selectedDate,
-        time: selectedTime,
+        day: selectedDay,
+        timeRange: `${startTime} - ${endTime}`,
       };
       setSelectedRanges([...selectedRanges, newRange]);
-      setSelectedTime(''); // Clear the selected time after adding it to the list
+      setSelectedDay('');
+      setStartTime('');
+      setEndTime('');
     }
   };
 
@@ -64,26 +70,49 @@ const Schedule = () => {
     <div>
       <h1 className='flex justify-center py-10 text-3xl font-bold'>Schedule Your Appointments</h1>
       <div className="max-w-6xl mx-auto">
-        <div className="w-full">
-          <Calendar className="mx-auto" onClickDay={handleDateClick} value={selectedDate} />
-        </div>
         <div className="justify-center">
-          <h2>Select Time:</h2>
-          <input
-            type="time"
-            value={selectedTime}
-            onChange={handleTimeChange}
-          />
-          <button className='' onClick={addTimeRange}>Add Time</button>
-          <ul>
-            {selectedRanges.map((range, index) => (
-              <li key={index}>
-                {range.date.toDateString()} - {range.time}
-                <button onClick={() => removeTimeRange(index)}>Remove</button>
-              </li>
+          <h2>Select a Day:</h2>
+          <div className="flex space-x-2">
+            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
+              <div
+                key={day}
+                className={`cursor-pointer p-2 border border-gray-300 rounded ${selectedDay === day ? 'bg-blue-200' : ''}`}
+                onClick={() => handleDayClick(day)}
+              >
+                {day}
+              </div>
             ))}
-          </ul>
-          <button onClick={handleAppointmentSave}>Save Appointments</button>
+          </div>
+          {selectedDay && (
+            <>
+              <h2>Select Time Range:</h2>
+              <div className="flex space-x-2">
+                <input
+                  type="time"
+                  value={startTime}
+                  onChange={handleStartTimeChange}
+                  className="p-2 border border-gray-300 rounded"
+                />
+                <div className="p-2">-</div>
+                <input
+                  type="time"
+                  value={endTime}
+                  onChange={handleEndTimeChange}
+                  className="p-2 border border-gray-300 rounded"
+                />
+                <button className="p-2 bg-blue-500 text-white rounded" onClick={addTimeRange}>Add Time Range</button>
+              </div>
+              <ul>
+                {selectedRanges.map((range, index) => (
+                  <li key={index}>
+                    {range.day} - {range.timeRange}
+                    <button onClick={() => removeTimeRange(index)}>Remove</button>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+          <button className="p-2 bg-blue-500 text-white rounded" onClick={handleAppointmentSave}>Save Appointments</button>
         </div>
       </div>
     </div>

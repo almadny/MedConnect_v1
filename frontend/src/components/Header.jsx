@@ -2,22 +2,19 @@ import { useState } from "react";
 import {GiHamburgerMenu} from 'react-icons/gi';
 import {MdClose} from 'react-icons/md';
 import Logo from "./Logo";
-import {useAuth} from "../context/UseAuth"
 
 function Header() {
   const [navBar, setNavBar] = useState(false)
-  const {isLoggedIn, account} = useAuth()
+  const account = localStorage.getItem("account-type");
 
   return (
     <main>
         <nav  className={`w-full bg-white fixed top-0 left-0 right-0 z-50`}>
           <div className="justify-between px-10 md:mx-auto md:max-w-8xl items-center md:flex">
             <div className="flex items-center justify-between py-3 md:py-6 md:block">
-              <a href="/">
-                <h1>
-                  <Logo />
-                </h1>
-              </a>
+              <h1>
+                <Logo />
+              </h1>
               <div className="md:hidden">
                 <button className="p-2 right-0 text-cyan-200 rounded-md outline-none focus:border-cyan-400" onClick={() => setNavBar(!navBar)}
                 >
@@ -64,46 +61,49 @@ function Header() {
                       FAQs
                     </a>
                   </li>
-                  {isLoggedIn ? (
-                  <>
-                    {account === "patients" ? (
-                      <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
-                        <a href="/patient_dashboard" onClick={() => setNavBar(!navBar)}>
-                          Patient Dashboard
-                        </a>
-                      </li>
-                    ) : account === "doctor" ? (
-                      <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
-                        <a href="/doctor_dashboard" onClick={() => setNavBar(!navBar)}>
-                          Doctor Dashboard
-                        </a>
-                      </li>
-                    ) : account === "hospital" (
-                      <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
-                        <a href="/admin_dashboard" onClick={() => setNavBar(!navBar)}>
-                          Hospital Dashboard
-                        </a>
-                      </li>
-                    )}
-                  </>
-                ) : (
-                  <>
+                  {account === "patients" && (
                     <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
-                      <a href="/Login" onClick={() => setNavBar(!navBar)}>
-                        Log In
+                      <a className="lg:border-2 lg:border-cyan-600 lg:px-4 lg:py-2 rounded-md" href="/patient_dashboard" onClick={() => setNavBar(!navBar)}>
+                        Patient Dashboard
                       </a>
                     </li>
+                  )}
+
+                  {account === "doctor" && (
                     <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
-                      <a
-                        className="lg:border-2 lg:border-cyan-600 lg:px-4 lg:py-2 rounded-md"
-                        href="/PSignUp"
-                        onClick={() => setNavBar(!navBar)}
-                      >
-                        Sign Up
+                      <a className="lg:border-2 lg:border-cyan-600 lg:px-4 lg:py-2 rounded-md" href="/doctor_dashboard" onClick={() => setNavBar(!navBar)}>
+                        Doctor Dashboard
                       </a>
                     </li>
-                  </>
-                )}
+                  )}
+
+                  {account === "hospital" && (
+                    <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
+                      <a className="lg:border-2 lg:border-cyan-600 lg:px-4 lg:py-2 rounded-md" href="/admin_dashboard" onClick={() => setNavBar(!navBar)}>
+                        Hospital Dashboard
+                      </a>
+                    </li>
+                  )}
+
+                  {!account && (
+                    <>
+                      <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover-text-cyan-600 md:hover-bg-transparent">
+                        <a href="/Login" onClick={() => setNavBar(!navBar)}>
+                          Log In
+                        </a>
+                      </li>
+                      <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover-text-cyan-600 md:hover-bg-transparent">
+                        <a
+                          className="lg:border-2 lg:border-cyan-600 lg:px-4 lg:py-2 rounded-md"
+                          href="/PSignUp"
+                          onClick={() => setNavBar(!navBar)}
+                        >
+                          Sign Up
+                        </a>
+                      </li>
+                    </>
+                  )}
+
                 </ul>
               </div>
             </div>
