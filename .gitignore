@@ -1,3 +1,6 @@
 virtualenv/
 create_data/
 instance/
+medvenv/
+__pycache__/
+data-dev.sqlite
