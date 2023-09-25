@@ -11,8 +11,9 @@ from flask import Blueprint, jsonify, abort, request
 from api.main import is_user
 from datetime import datetime, date
 from werkzeug.security import generate_password_hash, check_password_hash
-from api.models import Patients, Doctors, Healthcares
+from api.models import Patients, Doctors, Healthcares, TimeSlots
 from flask_jwt_extended import jwt_required
+from api.auth import access_required
 
 users_bp = Blueprint('users', __name__)
 
@@ -24,7 +25,7 @@ def register_patient():
     try:
         data = request.get_json()
         email_address = data['email_address']
-        hashed_password = data['hashed_password']
+        password = data['password']
         first_name = data['first_name']
         last_name = data['last_name']
         other_name = data['other_name']
@@ -35,7 +36,7 @@ def register_patient():
         
         
         if not is_user(email_address):
-            hash_password = generate_password_hash(hashed_password)
+            hash_password = generate_password_hash(password)
             patient = Patients(
                     first_name=first_name,
                     last_name=last_name,
@@ -46,19 +47,19 @@ def register_patient():
                     phone_number=phone_number,
                     hashed_password=hash_password
                     )
-            from api import db
+
             db.session.add(patient)
             db.session.commit()
-            return jsonify({'status' : 'Patient successfully added'}), 200
+            return jsonify({'status' : 'patient successfully added'}), 200
 
-        return jsonify({'message': 'User already exists'})
+        return jsonify({'message': 'user already exists'})
     except Exception as e:
         print(e)
         return jsonify({"status": "Unknown error"}) 
 
 
 @users_bp.route("/patients/<int:id>", strict_slashes=False)
-@jwt_required()
+#@jwt_required()
 def get_patient(id):
     """
     Get a patient from the database
@@ -99,26 +100,37 @@ def all_patients():
     return jsonify({'patients': all_patients}), 200
 
 @users_bp.route("/patients/<int:id>", methods=["PUT"], strict_slashes=False)
-@jwt_required()
+<<<<<<< HEAD
+#@jwt_required()
 def update_patient(id):
+=======
+@jwt_required()
+def updatePatient(id):
+    """
+    Updates patient record
+
+    Args:
+        id - patient id number
+
+    Return:
+        dict: status of update
+
+    """
+>>>>>>> b05707b39010306ebb54e10264a2ae9a0b0175bc
     patient = Patients.query.get(id)
     if not patient:
         return jsonify({'msg': 'User does not exist'})
     try:
         data = request.get_json()
-        print(data)
+        # print(data)
         patient.email_address = data.get('email_address', patient.email_address)
-        #password = data.get('hashed_password')
+
         patient.first_name = data.get('first_name', patient.first_name)
         patient.last_name = data.get('last_name', patient.last_name)
         patient.other_name = data.get('other_name', patient.other_name)
-        #dob_str = data.get('date_of_birth', patient.date_of_birth)
+    
         patient.gender = data.get('gender', patient.gender)
         patient.phone_number = data.get('phone_number', patient.phone_number)
-        #if password:
-        #patient.hashed_password = generate_password_hash(password)
-        #if dob_str:
-        #patient.date_of_birth = datetime.strptime(dob_str, '%Y-%m-%d').date()
 
         db.session.commit()
         return jsonify({'status' : 'Patient successfully updated'}), 200
@@ -141,15 +153,15 @@ def get_doctor(id):
                 "gender": doctor.gender,
                 "phone_number": doctor.phone_number,
                 "email_address": doctor.email_address,
-                "hashed_password": doctor.hashed_password,
                 "specialty": doctor.specialty
                 }),
             200
         )
     return jsonify({"message": "Doctor not found"}), 404
 
-
 @users_bp.route("/doctors", methods=["POST"])
+@access_required('admin')
+@jwt_required()
 def add_doctor():
     data = request.get_json()
     print(data)
@@ -163,19 +175,24 @@ def add_doctor():
     specialty = data.get("specialty")
     healthcare = data.get("healthcare_id")
     
+    if "@" not in email_address:
+            return jsonify({"error": "Invalid email address format"}), 400
+    
+    hashed_password = generate_password_hash(password)
+
     new_doctor = Doctors(first_name=first_name,
                           last_name= last_name, email_address=email_address,
                             other_name=other_name, gender=gender, 
                             phone_number=phone_number, specialty=specialty, 
-                            password=password, healthcare_id=healthcare)
+                            hashed_password=hashed_password, healthcare_id=healthcare)
 
     try:
         db.session.add(new_doctor)
         db.session.commit()
-        return jsonify({"message": "Doctor successfully added"}), 200
+        return jsonify({"message": "Doctor successfully added"}), 201
     except Exception as err:
         print(str(err))
-        return jsonify({"message": "Failed to create doctor"}), 400
+        return jsonify({"message": "Failed to create doctor"}), 500
 
 
 @users_bp.route("/doctors/<int:id>", methods=["PUT"])
@@ -192,8 +209,8 @@ def update_doctors(id):
         doctor.gender = data.get("gender", doctor.gender)
         doctor.phone_number = data.get("phone_number", doctor.phone_number)
         doctor.email_address = data.get("email_address", doctor.email_address)
-        #doctor.password = data.get("password", password)
         doctor.specialty = data.get("specialty", doctor.specialty)
+        
 
         db.session.commit()
         return jsonify({"message": "Doctor updated successfully"}), 200
@@ -327,4 +344,5 @@ def healthcare(id):
         return jsonify({"message": "Healthcare removed successfully"}), 200
     else:
         return jsonify({"message": "Healthcare not found"}), 404
+
 

@@ -36,7 +36,7 @@ def generateAddVideoToken(id):
     if not appt:
         return jsonify({'status': 'room not found'}), 200
     
-    # Add room id to appointments
+    # Add room id to appointments (Add room_name to appointments)
     room_name = appt.room
 
     # Generate token

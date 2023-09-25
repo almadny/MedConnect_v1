@@ -11,8 +11,8 @@ class Patients(db.Model):
     gender = db.Column(db.String(6), nullable=False)
     phone_number = db.Column(db.String(11), nullable=False, index=True, unique=True)
     email_address = db.Column(db.String(30), nullable=False, unique=True, index=True)
-    hashed_password = db.Column(db.String(128), nullable=False)
-    pat_appointments = db.relationship('Appointments', backref='patients')
+    hashed_password = db.Column(db.String(200), nullable=False)
+    appointments = db.relationship('Appointments', backref='patients')
     diagnosis = db.relationship('Diagnosis', backref='patients')
 
     def __repr__(self):
@@ -23,9 +23,11 @@ class Healthcares(db.Model):
     __tablename__ = 'healthcares'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), nullable=False, unique=True)
+    email_address = db.Column(db.String(30), nullable=False, unique=True, index=True)
     address = db.Column(db.String(32), nullable=False, unique=True)
     contact_number = db.Column(db.String(32), nullable=False, unique=True)
-    doctor = db.relationship('Doctors', backref='healthcares')
+    hashed_password = db.Column(db.String(200), nullable=False)
+    doctor = db.relationship('Doctors', backref='healthcares', lazy=True)
 
     def __repr__(self):
         """ Defines the Healthcare object string representation """
@@ -39,7 +41,7 @@ class TimeSlots(db.Model):
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
     day_of_the_week = db.Column(db.String(10), nullable=False, default='Everyday')
-    timeslots_appointment = db.relationship('Appointments', backref='timeslots')
+    timeslots_appointment = db.relationship('Appointments', backref='timeslots', lazy=True)
 
     def __repr__(self):
         """ Defines the available_time object string representation """
@@ -55,12 +57,14 @@ class Doctors(db.Model):
     phone_number = db.Column(db.String(11), nullable=False, index=True, unique=True)
     email_address = db.Column(db.String(30), nullable=False, unique=True, index=True)
     specialty = db.Column(db.String(20), nullable=True)
+    license_number = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
     healthcare_id = db.Column(db.Integer, db.ForeignKey('healthcares.id'), nullable=False)
     timeslots = db.relationship('TimeSlots', backref='doctors', lazy=True)
     dr_appointments = db.relationship('Appointments', backref='doctors', lazy=True)
     diagnosis = db.relationship('Diagnosis', backref='doctors', lazy=True)
     posts = db.relationship('Posts', backref='doctors', lazy=True)
+    exceptions = db.relationship('Exceptions', backref='exceptions', lazy=True)
 
     def __repr__(self):
         """ Defines the doctor object string representation """
@@ -75,7 +79,7 @@ class Appointments(db.Model):
     date_of_appointment = db.Column(db.Date, nullable=False)
     status = db.Column(db.String(10), nullable=False, default='Scheduled')
     notes = db.Column(db.Text, nullable=True)
-    time = db.Column(db.Integer, db.ForeignKey('timeslots.id'), nullable=False)
+    timeslot_id = db.Column(db.Integer, db.ForeignKey('timeslots.id'), nullable=False)
 
 
     def __repr__(self):
@@ -95,16 +99,24 @@ class Diagnosis(db.Model):
         """ Defines the Diagnosis object string representation """
         return f"Diagnosis('{self.id}': '{self.appointment_id}')"
 
-
 class Posts(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False)
     title = db.Column(db.String(30), nullable=False)
     category = db.Column(db.String(15), nullable=True, index=True)
+    # image = db.Column(db.String(20), nullable=False, default=post_image.jpg)
     content = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
         """ Defines the appointment object string representation """
         return f"Post('{self.id}': '{self.title}' '{self.category}' '{self.date_posted}')"
+
+class Exceptions(db.Model):
+    __tablename__ = 'exceptions'
+    id = db.Column(db.Integer, primary_key=True)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False)
+    date_of_exception = db.Column(db.DateTime, nullable=False)
+
+
