@@ -1,5 +1,5 @@
 from api import db
-from flask import Blueprint, jsonify, abort
+from flask import Blueprint, jsonify, abort, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from api.models import Posts, Doctors
 

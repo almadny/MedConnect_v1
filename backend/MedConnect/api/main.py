@@ -14,6 +14,7 @@ def is_user(email: str) -> bool:
         if real:
             return real
         return False
+    
 
 
 @main.route('/', methods=['GET'], strict_slashes=False)
