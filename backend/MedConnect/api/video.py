@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from twilio.jwt.access_token import AccessToken
 from twilio.jwt.access_token.grants import VideoGrant
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from models import Appointments
+from api.models import Appointments
 
 load_dotenv()
 twilio_account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
@@ -36,7 +36,7 @@ def generateAddVideoToken(id):
     if not appt:
         return jsonify({'status': 'room not found'}), 200
     
-    # Add room id to appointments
+    # Add room id to appointments (Add room_name to appointments)
     room_name = appt.room
 
     # Generate token
