@@ -6,7 +6,7 @@ from api.models import Patients, Doctors
 
 main = Blueprint('main', __name__)
 
-all_users = {'patients': Patients, 'poctors': Doctors}
+all_users = {'patients': Patients, 'doctors': Doctors}
 
 def is_user(email: str) -> bool:
     for user_type, user_value in all_users.items():
