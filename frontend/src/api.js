@@ -1,8 +1,6 @@
-const API_BASE_URL = "https://fake-api-url.com";
-
 export const getPublishedArticles = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/articles`);
+    const response = await fetch('/api/blog/posts');
     if (!response.ok) {
       throw new Error(`Failed to fetch articles (${response.status})`);
     }
@@ -16,7 +14,7 @@ export const getPublishedArticles = async () => {
 
 export const publishArticle = async (articleData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/articles`, {
+    const response = await fetch('api/blog/addpost', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +34,7 @@ export const publishArticle = async (articleData) => {
 
 export const saveArticle = async (articleData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/articles/${articleData.id}`, {
+    const response = await fetch(`/articles`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

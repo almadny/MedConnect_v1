@@ -16,6 +16,8 @@ import DrLayout from './layout/DrLayout';
 import Schedule from './pages/DrDashboard/Schedule';
 import DrAppointments from './pages/DrDashboard/DrAppointments';
 import DrBlog from './pages/DrDashboard/DrBlog';
+import Room from './pages/DrDashboard/Room';
+import PRoom from './pages/Dashboard/PRoom';
 
 function App() {
 
@@ -32,6 +34,7 @@ function App() {
             <Route path='patient_dashboard' element={<DashboardLayout />}>
               <Route path='find_a_doctor' element={<FindADoctor />} />
               <Route path='appointment' element={<Appointment />} />
+              <Route path='patient_room' element={<PRoom />} />
             </Route>
             <Route path='hospital_dashboard' element={<HospitalLayout/>}>
               <Route path='add_doctor' element={<AddDoctor/>}/>
@@ -41,6 +44,7 @@ function App() {
               <Route path='schedule' element={<Schedule/>}/>
               <Route path='appointments' element={<DrAppointments/>}/>
               <Route path='dr_blog' element={<DrBlog/>}/>
+              <Route path='room' element={<Room/>}/>
             </Route>
           </Route>
         </Routes>
