@@ -2,32 +2,43 @@ import React, { useState } from 'react'
 import Logo from '../../components/Logo'
 import LoginImg from '../../assets/Login-image.jpg'
 import { useAuth } from '../../context/UseAuth'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const { login} = useAuth();
+  const navigate = useNavigate()
 
   const handleSignIn = async () => {
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: 'your-email', password: 'your-password' }),
-      });
-
-      if (response.ok) {
-        const userData = await response.json();
-        login(userData);
-      } else {
-        console.error('Login failed');
-      }
-    } catch (error) {
-      console.error('An error occurred during login:', error);
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email_address: email, password: password }),
+    });
+      
+    if (!response.ok) {
+      throw Error('There was a problem in the login request')
     }
+      
+    if(response.status === 401) {
+      throw Error ('Invalid credentials');
+    } else if(response.status === 400) {
+      throw("invalid email or password format")
+    }
+    
+    const data = await response.json()
+    login(data)
+    console.log(data)
+
+    // if (response.status === 200) {
+    //   navigate('/')
+    //   e.preventDefault()
+    // }
+    navigate('/')
   };
 
 
@@ -61,7 +72,7 @@ const Login = () => {
             <p>Forgot password?</p>
           </div>
           <div className='border-2 border-slate-500 rounded w-full my-5 py-2 bg-slate-500 text-slate-100 shadow-lg hover:shadow-slate-600 font-semibold'>
-            <input onClick={handleSignIn} className='cursor-pointer w-full mx-auto' type="submit" value="Sign In"/>
+            <input onClick={(e) => handleSignIn(e.preventDefault())} className='cursor-pointer w-full mx-auto' type="submit" value="Sign In"/>
           </div>
           <div>
             <p>You don't have an account? <a href=''>Sign Up</a></p>

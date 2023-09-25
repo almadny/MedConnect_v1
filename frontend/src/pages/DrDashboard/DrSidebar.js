@@ -6,6 +6,7 @@ const NavData = [
     { name: 'Schedule', link: '/doctor_dashboard/schedule' },
     { name: 'Appointments', link: '/doctor_dashboard/appointments' },
     { name: 'Blog', link: '/doctor_dashboard/dr_blog' },
+    { name: 'Room', link: '/doctor_dashboard/room' },
     { name: 'Logout', link: '/logout'}
 ];
 

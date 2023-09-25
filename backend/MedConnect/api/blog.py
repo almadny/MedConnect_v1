@@ -10,9 +10,17 @@ blog = Blueprint('blog', __name__)
 def getPost(id):
     """
     get a blog Post
+
+    Args:
+        id - Post id
+
+    Return:
+        dict - A JSON dictionary containing the post data
     """
     # get user with id
     post = Posts.query.get(id)
+
+    # Check if post is available and return the data
     if not post:
         return jsonify({'status' : 'post not found'}), 404
     return jsonify({
@@ -66,7 +74,7 @@ def addPost():
         None
 
     Returns:
-        dict: A JSON dictionary with the status code of the operation
+        dict - A JSON dictionary with the status code of the operation
     """
     try:
         data = request.get_json()
@@ -96,6 +104,12 @@ def addPost():
 def updatePost(id):
     """
     update post
+
+    Args:
+        id - Post id
+
+    Return:
+        Dict - Containing status of update
     """
     post = Posts.query.get(id)
     if not post:
@@ -116,6 +130,15 @@ def updatePost(id):
 @jwt_required()
 @blog.route("/posts/<int:id>", methods=["DELETE"])
 def deletePost(id):
+    """
+    Delete a post
+
+    Args:
+        id - Post id
+
+    Return:
+        dict - JSON dictionary with status of delete
+    """
     post = Posts.query.get(id)
     if not post:
         return jsonify({'msg': 'post not found'}), 404
@@ -130,6 +153,12 @@ def deletePost(id):
 def getDoctorPosts(id):
     """
     Get all post by a particular doctor
+
+    Args:
+        id - Doctors id
+
+    Return:
+        list - JSON list containing dictionary of all post made by the doctor
     """
     # get doctor first
     doctor = Doctors.query.get(id)

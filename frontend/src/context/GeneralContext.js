@@ -6,23 +6,26 @@ export const AuthProvider = ({ children }) => {
     const [isLoggedin, setIsLoggedIn] = useState(false);
     const [account, setAccount] = useState("");
 
-    const login = (token, account) => {
-        localStorage.setItem('token', token);
-        localStorage.setItem('account', account);
+    const login = async (data) => {
+      
+      const account = data.user_type
+
+      localStorage.setItem("jwt-token", data.access_token);
+      localStorage.setItem("account-type", account);
     
-        setIsLoggedIn(true);
-        setAccount(account);
+      setIsLoggedIn(true);
+      setAccount(account);
     };
     
     const logout = () => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('account');
+      localStorage.removeItem('jwt-token');
+      localStorage.removeItem('account-type');
 
       setIsLoggedIn(false);
       setAccount('');
     };
     
-    const contextData = { login, logout, isLoggedin, account };
+    const contextData = { login, logout, isLoggedin, setIsLoggedIn, account };
 
     return (
         <GeneralContext.Provider value={contextData}>
