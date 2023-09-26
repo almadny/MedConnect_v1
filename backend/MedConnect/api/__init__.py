@@ -3,11 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+from flask_migrate import Migrate
 
 
 db = SQLAlchemy()
 jwt = JWTManager()
 cors = CORS()
+migrate = Migrate()
 
 
 def create_app(config_name=Config):
@@ -17,6 +19,7 @@ def create_app(config_name=Config):
     db.init_app(app)
     jwt.init_app(app)
     cors.init_app(app)
+    migrate.init_app(app, db)
 
     from api.errors import error
     app.register_blueprint(error, url_prefix='/api/error')
