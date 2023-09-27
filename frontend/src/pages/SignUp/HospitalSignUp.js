@@ -8,11 +8,12 @@ const HospitalSignUp = (e) => {
   const [hname, setHname] = useState("")
   const [email, setEmail] = useState("")
   const [add, setAdd] = useState("")
+  const [contact, setContact] = useState("")
   const [password, setPassword] = useState("")
   const navigate = useNavigate()
 
   const handleSignUp = async () => {
-    let data = {hname, email, add, password}
+    let data = {hname, email, add, password, contact}
     console.log(data)
 
     const apiUrl = '/api/users/healthcares'
@@ -58,6 +59,10 @@ const HospitalSignUp = (e) => {
           <div className='flex flex-col text-slate-800 py-2'>
             <label>Address </label>
             <input value={add} onChange={(e)=> setAdd(e.target.value)} className='rounded-lg mt-2 p-2 focus:border-slate-300 focus:bg-slate-100' type="text"/>
+          </div>
+          <div className='flex flex-col text-slate-800 py-2'>
+            <label>Contact Number </label>
+            <input value={contact} onChange={(e)=> setContact(e.target.value)} className='rounded-lg mt-2 p-2 focus:border-slate-300 focus:bg-slate-100' type="tel"/>
           </div>
           <div className='flex flex-col text-slate-800 py-2'>
             <label>Password </label>

@@ -298,7 +298,7 @@ def get_healthcare(id):
 
 
 @users_bp.route("/healthcares", methods=['GET'], strict_slashes=False)
-#@jwt_required()
+@jwt_required()
 def all_healthcares():
     healthcares = Healthcares.query.all()
     all_healthcares = []
