@@ -58,7 +58,7 @@ class Doctors(db.Model):
     email_address = db.Column(db.String(30), nullable=False, unique=True, index=True)
     specialty = db.Column(db.String(20), nullable=True)
     license_number = db.Column(db.String(20), nullable=False, unique=True)
-    password = db.Column(db.String(128), nullable=False)
+    hashed_password = db.Column(db.String(128), nullable=False)
     healthcare_id = db.Column(db.Integer, db.ForeignKey('healthcares.id'), nullable=False)
     timeslots = db.relationship('TimeSlots', backref='doctors', lazy=True)
     dr_appointments = db.relationship('Appointments', backref='doctors', lazy=True)

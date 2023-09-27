@@ -100,10 +100,6 @@ def all_patients():
     return jsonify({'patients': all_patients}), 200
 
 @users_bp.route("/patients/<int:id>", methods=["PUT"], strict_slashes=False)
-<<<<<<< HEAD
-#@jwt_required()
-def update_patient(id):
-=======
 @jwt_required()
 def updatePatient(id):
     """
@@ -116,7 +112,6 @@ def updatePatient(id):
         dict: status of update
 
     """
->>>>>>> b05707b39010306ebb54e10264a2ae9a0b0175bc
     patient = Patients.query.get(id)
     if not patient:
         return jsonify({'msg': 'User does not exist'})
@@ -268,12 +263,13 @@ def add_health():
         name = data.get("name")
         address = data.get('address')
         contact_number = data.get('contact_number')
+        email_address = data.get('email_address')
 
         existing_healthcare = Healthcares.query.filter_by(name=name).first()
         if existing_healthcare:
             return jsonify({"error": "Healthcare entity with the same name already exists"}), 409  # 409 Conflict status
 
-        new_healthcare = Healthcares(name=name, address=address, contact_number=contact_number)
+        new_healthcare = Healthcares(name=name, address=address, contact_number=contact_number, email_address=email_address)
                              
         db.session.add(new_healthcare)
         db.session.commit()
@@ -296,12 +292,13 @@ def get_healthcare(id):
             'name' : healthcare.name,
             'address' : healthcare.address,
             'contact_number' : healthcare.contact_number,
+            'email_address' : healthcare.email_address,
             }), 200
     return jsonify({'error': 'Healthcare not found'})
 
 
 @users_bp.route("/healthcares", methods=['GET'], strict_slashes=False)
-@jwt_required()
+#@jwt_required()
 def all_healthcares():
     healthcares = Healthcares.query.all()
     all_healthcares = []
@@ -311,6 +308,7 @@ def all_healthcares():
             'name' : healthcare.name,
             'address' : healthcare.address,
             'contact_number' : healthcare.contact_number,
+            'email_address' : healthcare.email_address,
             }
             all_healthcares.append(health)
     return jsonify({'healthcare': all_healthcares}), 200
@@ -326,6 +324,7 @@ def update_healthcare(id):
         healthcare.name = data.get('name', healthcare.name)
         healthcare.address = data.get('address', healthcare.address)
         healthcare.contact_number = data.get('contact_number', healthcare.contact_number)
+        healthcare.email_address = data.get('email_address', healthcare.email_address)
 
         db.session.commit()
         return jsonify({'status' : 'Healthcare successfully added'}), 200
