@@ -1,38 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { getPublishedArticles } from "../api";
+import { Link } from "react-router-dom";
 
 const DrBlogList = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getPublishedArticles()
-      .then((response) => {
-        setArticles(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching articles: ", error);
-      });
-  }, []);
+      fetch('/api/blog/posts')
+        .then((response) => response.json())
+        .then((data) => {
+  
+          data.posts.forEach((post) => {
+            articles.push(post)
+          });
+          console.log(articles)
+        })
+        .catch((error) => console.error('Error fetching posts:', error));
+    }, []);
 
   return (
-    <div className="container mx-auto mt-8">
-      {loading ? (
-        <p>Loading...</p>
-      ) : articles.length > 0 ? (
-        <ul>
-          {articles.map((article) => (
-            <li key={article.id}>
-              <h2>{article.title}</h2>
-              <p>{article.body}</p>
-              {/* Display image here */}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No published articles yet.</p>
-      )}
+    <div className='grid md:grid-cols-3 gap-3'>
+      {articles.map((post) => (
+        <div className='border border-white p-5 drop-shadow-md bg-white' key={post.id}>
+          <Link to={`/post/${post.id}`} className='cursor-pointer'>
+            <p>Date: {post.date_posted}</p>
+            <p>Title: {post.title}</p>
+          </Link>
+        </div>
+      ))}
     </div>
   );
 };

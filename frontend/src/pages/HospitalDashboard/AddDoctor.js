@@ -9,7 +9,7 @@ const AddDoctor = () => {
   const [password, setPassword] = useState("")
 
   const AddDoc = () => {
-    let data = {fname, email, license, spec}
+    let data = {fname, email, license, spec, password}
     console.log(data)
 
     const apiUrl = "/api/users/doctors"

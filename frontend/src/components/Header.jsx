@@ -69,7 +69,7 @@ function Header() {
                     </li>
                   )}
 
-                  {account === "doctor" && (
+                  {account === "doctors" && (
                     <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
                       <a className="lg:border-2 lg:border-cyan-600 lg:px-4 lg:py-2 rounded-md" href="/doctor_dashboard" onClick={() => setNavBar(!navBar)}>
                         Doctor Dashboard
@@ -77,9 +77,9 @@ function Header() {
                     </li>
                   )}
 
-                  {account === "hospital" && (
+                  {account === "healthcares" && (
                     <li className="pb-6 text-lg py-2 px-6 text-center border-b-2 md:border-b-0 border-cyan-200 md:hover:text-cyan-600 md:hover-bg-transparent">
-                      <a className="lg:border-2 lg:border-cyan-600 lg:px-4 lg:py-2 rounded-md" href="/admin_dashboard" onClick={() => setNavBar(!navBar)}>
+                      <a className="lg:border-2 lg:border-cyan-600 lg:px-4 lg:py-2 rounded-md" href="/hospital_dashboard" onClick={() => setNavBar(!navBar)}>
                         Hospital Dashboard
                       </a>
                     </li>

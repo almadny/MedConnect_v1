@@ -17,7 +17,7 @@ function DrBlog() {
         <div className="mt-8">
           <DrBlogList />
         </div>
-        <div className="fixed bottom-4 right-4">
+        <div className="fixed bottom-4 right-4 text-4xl cursor-pointer text-white p-2 rounded-full bg-slate-500">
           <a onClick={toggleForm}>
             <AiOutlinePlus />
           </a>

@@ -22,18 +22,14 @@ const PRoom = () => {
   };
 
   useEffect(() => {
-    // Initialize Twilio Video with the token and roomName
-    // Make sure to use your Twilio Account SID and API Key/Secret from your backend to generate the token
-    // You should use the 'Video.connect' method to join the room
     if (token && roomName) {
-      // Example usage
-      // Video.connect(token, {
-      //   name: roomName,
-      //   audio: isAudioEnabled,
-      //   video: { enabled: isCameraEnabled },
-      // }).then((room) => {
-      //   // Handle room events and UI updates here
-      // });
+      Video.connect(token, {
+        name: roomName,
+        audio: isAudioEnabled,
+        video: { enabled: isCameraEnabled },
+      }).then((room) => {
+        // Handle room events and UI updates here
+      });
     }
   }, [token, roomName, isAudioEnabled, isCameraEnabled]);
 

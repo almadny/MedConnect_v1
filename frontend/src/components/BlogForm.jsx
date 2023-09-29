@@ -3,8 +3,7 @@ import React, { useState } from "react";
 const BlogForm = () => {
   const [formData, setFormData] = useState({
     title: "",
-    image: null,
-    body: "",
+    content: "",
   });
 
   const handleInputChange = (e) => {
@@ -15,17 +14,33 @@ const BlogForm = () => {
     });
   };
 
-  const handleImageChange = (e) => {
-    const imageFile = e.target.files[0];
-    setFormData({
-      ...formData,
-      image: imageFile,
-    });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement the publish/save logic here
+
+    try {
+      const response = await fetch("/api/blog/addpost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setFormData({
+          title: "",
+          content: "",
+        });
+
+        alert("Post added successfully!");
+      } else {
+        console.error("Error adding post:", response.statusText);
+        alert("Error adding post. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error adding post:", error);
+      alert("Error adding post. Please try again.");
+    }
   };
 
   return (
@@ -46,26 +61,13 @@ const BlogForm = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="image" className="block text-gray-700 font-bold">
-            Image
-          </label>
-          <input
-            type="file"
-            id="image"
-            name="image"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="body" className="block text-gray-700 font-bold">
+          <label htmlFor="content" className="block text-gray-700 font-bold">
             Body
           </label>
           <textarea
-            id="body"
-            name="body"
-            value={formData.body}
+            id="content"
+            name="content"
+            value={formData.content}
             onChange={handleInputChange}
             className="w-full p-2 border rounded"
             rows="6"

@@ -18,6 +18,7 @@ import DrAppointments from './pages/DrDashboard/DrAppointments';
 import DrBlog from './pages/DrDashboard/DrBlog';
 import Room from './pages/DrDashboard/Room';
 import PRoom from './pages/Dashboard/PRoom';
+import PostDetails from './pages/Blog/PostDetails'
 
 function App() {
 
@@ -29,7 +30,9 @@ function App() {
             <Route path='PSignUp' element={<PatientSignUp/>} />
             <Route path='HSignUp' element={<HospitalSignUp/>} />
             <Route path='Login' element={<Login/>} />
-            <Route path='Blog' element={<Blog/>} />
+            <Route path='Blog' element={<Blog/>}>
+              <Route path="post" element={<PostDetails/>} />
+            </Route>
             <Route path='FindHospital' element={<FindHospital/>} />
             <Route path='patient_dashboard' element={<DashboardLayout />}>
               <Route path='find_a_doctor' element={<FindADoctor />} />
