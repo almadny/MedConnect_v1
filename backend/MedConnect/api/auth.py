@@ -24,7 +24,8 @@ def login():
             access_token = create_access_token(identity=user_object.id, additional_claims=additional_claims)
 
             return jsonify({"access_token": access_token, 
-            "user_type": user[1]}), 200
+            "user_type": user[1],
+            "id": user_object.id}), 200
             # 401 Unauthorized
         return jsonify({"message": "Invalid username or password"}), 401
     except Exception as e:
