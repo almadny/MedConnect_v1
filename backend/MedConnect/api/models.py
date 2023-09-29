@@ -38,8 +38,8 @@ class TimeSlots(db.Model):
     __tablename__ = 'timeslots'
     id = db.Column(db.Integer, primary_key=True)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False)
-    end_time = db.Column(db.DateTime, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
     day_of_the_week = db.Column(db.String(10), nullable=False, default='Everyday')
     timeslots_appointment = db.relationship('Appointments', backref='timeslots', lazy=True)
 
