@@ -20,9 +20,9 @@ const DashboardSidebar = () => {
     }
     return (
         <aside className="flex flex-col pt-3 min-h-screen w-full">
-            <a className="hidden md:block py-4 pb-20 w-full text-center text-slate-100" href="/">
+            <div className="hidden md:block py-4 pb-20 w-full text-center text-slate-100" href="/">
                 <Logo />
-            </a>
+            </div>
             <nav className="flex flex-col gap-12">
                 <div className="flex flex-col gap-0 justify-center">
                     {NavData.slice(0, -1).map(({ name, link }, index) => {

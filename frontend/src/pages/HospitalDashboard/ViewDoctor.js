@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {CiEdit, CiSaveDown2} from 'react-icons/ci'
 import {MdDelete} from 'react-icons/md'
 import {FcCancel} from 'react-icons/fc'
@@ -24,6 +24,16 @@ const ViewDoctor = () => {
     const updatedData = data.filter((item) => item.id !== id);
     setData(updatedData);
   };
+
+  const apiUrl = '/api/users/doctors'
+  useEffect = () => {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+  }
 
   const [data, setData] = useState([
     {

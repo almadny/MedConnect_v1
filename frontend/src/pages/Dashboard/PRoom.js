@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Video from 'react-twilio-video';
+import Video from 'twilio-video';
 
 const PRoom = () => {
   const [roomName, setRoomName] = useState(''); // Initialize with the room name received from the backend
