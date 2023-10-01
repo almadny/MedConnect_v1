@@ -29,11 +29,11 @@ def regPatient():
         password = data['hashed_password']
         first_name = data['first_name']
         last_name = data['last_name']
-        other_name = data['other_name']
+        #other_name = data['other_name']
         dob_str = data['date_of_birth']
         date_of_birth = datetime.strptime(dob_str, '%Y-%m-%d').date()
-        gender = data['gender']
-        phone_number = data['phone_number']
+        #gender = data['gender']
+        #phone_number = data['phone_number']
         
         
         if not is_user(email_address):
@@ -41,11 +41,11 @@ def regPatient():
             patient = Patients(
                     first_name=first_name,
                     last_name=last_name,
-                    other_name=other_name,
+                    #other_name=other_name,
                     email_address=email_address,
                     date_of_birth=date_of_birth,
-                    gender=gender,
-                    phone_number=phone_number,
+                    #gender=gender,
+                    #phone_number=phone_number,
                     hashed_password=hash_password
                     )
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Schedule = () => {
   const [selectedDay, setSelectedDay] = useState('');
@@ -38,15 +38,35 @@ const Schedule = () => {
     setSelectedRanges(updatedRanges);
   };
 
-  // Function to save selected time ranges to the database
+  const apiUrl = '/api/appt/addTimeSlot'
+  const doctorId = localStorage.getItem('user_id')
+
+  const [appointmentData, setAppointmentData] = useState({
+    doctor_id: '',
+    start_time_str: '',
+    end_time_str: '',
+    day_of_the_week: '',
+  });
+
+  useEffect(() => {
+    if (doctorId && startTime && endTime && selectedDay) {
+      setAppointmentData({
+        doctor_id: doctorId,
+        start_time_str: startTime,
+        end_time_str: endTime,
+        day_of_the_week: selectedDay,
+      });
+    }
+  }, [doctorId, startTime, endTime, selectedDay]);
+  
   const handleAppointmentSave = () => {
-    // Send the data to your backend API using fetch
-    fetch('/api/appointments', {
+    console.log(JSON.stringify(appointmentData))
+    fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(selectedRanges),
+      body: JSON.stringify(appointmentData),
     })
       .then((response) => {
         if (!response.ok) {
@@ -56,13 +76,12 @@ const Schedule = () => {
       })
       .then((data) => {
         console.log('Appointments saved:', data);
-        // Handle success, maybe show a confirmation message to the user
-        // Clear selectedRanges after successful save if needed
+        
+        alert('Available time successfully saved')
         setSelectedRanges([]);
       })
       .catch((error) => {
         console.error('Error saving appointments:', error);
-        // Handle errors, display an error message to the user
       });
   };
 
@@ -104,9 +123,9 @@ const Schedule = () => {
               </div>
               <ul>
                 {selectedRanges.map((range, index) => (
-                  <li key={index}>
+                  <li className='p-4' key={index}>
                     {range.day} - {range.timeRange}
-                    <button onClick={() => removeTimeRange(index)}>Remove</button>
+                    <button className='ps-4' onClick={() => removeTimeRange(index)}>Remove</button>
                   </li>
                 ))}
               </ul>

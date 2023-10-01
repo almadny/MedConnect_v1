@@ -105,13 +105,13 @@ db.session.commit()
 
 sample_doctors = [
     Doctors(
-        first_name='John',
-        last_name='Smith',
+        first_name='Abdulrasheed',
+        last_name='Bello',
         gender='Male',
-        phone_number='1111111111',
-        email_address='john.smith@example.com',
+        phone_number='1123111111',
+        email_address='bell.rash@example.com',
         specialty='Cardiology',
-        license_number='12345',
+        license_number='12356',
         hashed_password=generate_password_hash('hashed_password_1'),
         healthcare_id=1
     ),
@@ -221,3 +221,5 @@ for healthcare in sample_healthcares:
 
 # Commit the changes to the database
 db.session.commit()
+
+TimeSlots(doctor_id=2, start_time=time(9, 0, 0), end_time=time(15, 0, 0), day_of_the_week="Tuesday")

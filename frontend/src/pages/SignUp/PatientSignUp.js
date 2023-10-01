@@ -16,9 +16,11 @@ const PatientSignUp = () => {
     let data = { fname, lname, email, dob, password };
     console.log(data);
     console.log(dob);
-  
+    
+    e.preventDefault()
+
     try {
-      const response = await fetch('/api/users/patient', {
+      const response = await fetch('/api/users/regPatient', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,7 +40,6 @@ const PatientSignUp = () => {
 
       if (response.status=== 200) {
         navigate('/Login')
-        e.preventDefault()
       }
   
       if (!response.ok) {

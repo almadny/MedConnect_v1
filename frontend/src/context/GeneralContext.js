@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
 
       localStorage.setItem("jwt-token", data.access_token);
       localStorage.setItem("account-type", account);
+      localStorage.setItem("user_id", data.id);
     
       setIsLoggedIn(true);
       setAccount(account);
@@ -20,6 +21,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
       localStorage.removeItem('jwt-token');
       localStorage.removeItem('account-type');
+      localStorage.removeItem("user_id");
 
       setIsLoggedIn(false);
       setAccount('');

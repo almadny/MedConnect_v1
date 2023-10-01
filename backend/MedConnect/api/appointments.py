@@ -220,15 +220,19 @@ def availTimeSlots():
     """
     # Extract date from request object
     try:
-        data = request.get_json()
-        date_str = data.get('dateChoosen')
+        # data = request.get_json()
+        # date_str = data.get('dateChoosen')
+
+        date_str = request.args.get('dateChosen')
+        #date_string = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%fZ")
 
         if date_str is None:
             return jsonify({'error':'No date choosen'}), 400
 
         try:
             # Date is not less than today
-            date = datetime.strptime(date_str, '%Y-%m-%d')
+            date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+            #date = date_string.strftime("%Y-%m-%d")
 
             if date.date() < datetime.today().date():
                 return jsonify({'error' : 'invalid date'}), 400
@@ -278,13 +282,13 @@ def availTimeSlots():
         
             # Create a dictionary with doctor schedule
             timeslot_item = {
-                'time slot id' : timeSlot.id,
-                'slot day' : timeSlot.day_of_the_week,
-                'start time' : timeSlot.start_time.strftime('%H:%M %p'),
-                'end time' : timeSlot.end_time.strftime('%H:%M %p'),
-                'doctor id' : timeSlot.doctor_id,
-                'doctor name' : f"{doctor.first_name} {doctor.last_name} {doctor.other_name}",
-                'Patients on queue' : len(doctorAppts)
+                'time_slot_id' : timeSlot.id,
+                'slot_day' : timeSlot.day_of_the_week,
+                'start_time' : timeSlot.start_time.strftime('%H:%M %p'),
+                'end_time' : timeSlot.end_time.strftime('%H:%M %p'),
+                'doctor_id' : timeSlot.doctor_id,
+                'doctor_name' : f"{doctor.first_name} {doctor.last_name} {doctor.other_name}",
+                'Patients_on_queue' : len(doctorAppts)
                 }
 
             # Append schedule to all schedules
@@ -322,7 +326,7 @@ def bookAppointment():
             return jsonify({'error' : 'doctor id, patient id, timeslot id and date of appointment are required'}), 400
         
         try:
-            apptDate = datetime.strptime(date_of_appointment, '%Y-%m-%d')
+            apptDate = datetime.strptime(date_of_appointment, "%Y-%m-%dT%H:%M:%S.%fZ").date()
 
         except ValueError as date_conversion_error:
             return jsonify({"error" : f"Invalid date format {date_conversion_error}"}), 400
@@ -341,7 +345,7 @@ def bookAppointment():
 
         return jsonify({
                     'status' : 'appointment booked successfully',
-                    'appointment id' : newAppt.id
+                    'appointment_id' : newAppt.id
                 }), 200
 
     except Exception as ex:
@@ -450,11 +454,11 @@ def getAppointment(id):
         timeSlot = TimeSlots.query.get(appointment.timeslot_id)
 
         return jsonify({
-            'appointment id' : appointment.id,
-            'patient id' : appointment.patient_id,
-            'doctor id' : appointment.doctor_id,
+            'appointment_id' : appointment.id,
+            'patient_id' : appointment.patient_id,
+            'doctor_id' : appointment.doctor_id,
             'date' : datetime.strftime(appointment.date_of_appointment, '%Y-%m-%d'),
-            'time id' : appointment.timeslot_id, # dateime.isoformat(timeSlot.time.time())
+            'time_id' : appointment.timeslot_id, # dateime.isoformat(timeSlot.time.time())
             'status' : appointment.status
             }), 200
 
