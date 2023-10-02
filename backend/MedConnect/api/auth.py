@@ -1,12 +1,11 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import Flask, request, jsonify, Blueprint
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 from functools import wraps
 
 auth_bp = Blueprint('auth_bp', __name__)
 
-
-@auth_bp.route("/login", methods=["POST"])
+@auth_bp.route("/login", methods=["POST"], strict_slashes=False)
 def login():
     try:
         data = request.get_json()
@@ -31,13 +30,15 @@ def login():
     except Exception as e:
         print(e)
 
+
+@jwt_required()
 def access_required(access_level):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            user_claims = get_jwt_claims()
-            user_type = user_claims.get('type', None)
-            if user_type != access_level:
+            user = get_jwt_claims()
+            from api.main import all_users
+            if not isinstance(user, all_users[access_level]):
                 return jsonify ({'status' : 'Unauthorized'}), 403
             return func(*args, **kwargs)
         return wrapper

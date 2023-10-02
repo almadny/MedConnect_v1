@@ -29,7 +29,7 @@ from api.models import Appointments, Doctors, Patients, TimeSlots, Exceptions
 appt_bp = Blueprint('appt_bp', __name__)
 
 
-@appt_bp.route('/gettimeSlot/<int:id>', methods=['GET'], strict_slashes=False)
+@appt_bp.route('/getTimeSlot/<int:id>', methods=['GET'], strict_slashes=False)
 # @jwt_required()
 def getTimeSlot(id):
     try:
@@ -49,7 +49,7 @@ def getTimeSlot(id):
         return jsonify({'error' : 'server error'}), 500
 
 
-@appt_bp.route('/gettimeSlots', methods=['GET'], strict_slashes=False)
+@appt_bp.route('/getTimeSlots', methods=['GET'], strict_slashes=False)
 # @jwt_required()
 def getTimeSlots():
     time_slots = TimeSlots.query.all()
@@ -235,7 +235,7 @@ def availTimeSlots():
             #date = date_string.strftime("%Y-%m-%d")
 
             if date.date() < datetime.today().date():
-                return jsonify({'error' : 'invalid date'}), 400
+                return jsonify({'error' : 'date must be later than now'}), 400
         
         except ValueError as ve:
             return jsonify({'error' : str(ve)}), 400
@@ -253,20 +253,25 @@ def availTimeSlots():
 
         if not matchedTimeSlots:
             return jsonify({'error': 'No available slot for the selected date'}), 404
+
+        print(f"{matchedTimeSlots}")
     
         # Define list of all schedules
         allTimeSlots = []
 
         # Create available timeslot list for date selected
         for timeSlot in matchedTimeSlots:
-            doctorAppts = Appointments.query.filter(and_(
+    
+            doctorAppts = Appointments.query.filter(
                         Appointments.doctor_id==timeSlot.doctor_id,
                         Appointments.timeslot_id==timeSlot.id,
-                        Appointments.date_of_appointment==date,
+                        Appointments.date_of_appointment==date.date(),
                         Appointments.status=='Scheduled'
-                        )
                     ).all()
-    
+
+            print(f"{doctorAppts}")
+            print(f"{date}")
+
             # Get doctor with schedule information
             doctor = Doctors.query.get(timeSlot.doctor_id)
         
@@ -294,7 +299,7 @@ def availTimeSlots():
             # Append schedule to all schedules
             allTimeSlots.append(timeslot_item)
     
-        return jsonify({'availSchedules' : allTimeSlots }), 200
+        return jsonify({'availTimeSlots' : allTimeSlots }), 200
 
     except Exception as ex:
         print(str(ex))
@@ -354,29 +359,7 @@ def bookAppointment():
         return jsonify({'error' : 'An error occurred while processing the request'}), 500
 
 
-@appt_bp.route("/updateAppt/<int:id>", methods=["PUT"], strict_slashes=False)
-def rescheduleAppointment(id):
-    """
-    Reschedules an appointment
-    """
-    appointment = Appointments.query.get(id)
-    
-    if not appointment:
-        return jsonify({'message': 'Appointment not found'}), 404
-    
-    data = request.get_json()
-    timeslot_id = data.get('timeslot_id')
-    
-    if timeslot_id == appointment.timeslot_id:
-        return jsonify({'status' : 'same data as before'}), 200
-    
-    appointment.timeslot_id = data.get('timeslot_id', appointment.timeslot_id)
-    db.session.commit()
-    
-    return jsonify({'status' : 'successfully rescheduled'}), 200
-
-
-@appt_bp.route('/cancelAppt/<int:id>', methods=['PUTS'], strict_slashes=False)
+@appt_bp.route('/cancelAppt/<int:id>', methods=['PUT'], strict_slashes=False)
 def cancelAppt(id):
     """
     Cancel an appointment
@@ -397,6 +380,9 @@ def cancelAppt(id):
         if appointment.status == 'Cancelled':
             return jsonify({'status': 'appointment already canceled'}), 401
 
+        if appointment.status == 'Completed':
+            return jsonify({'status' : 'appointment already completed'}), 401
+
         appointment.status = 'Cancelled'
 
         db.session.commit()
@@ -406,7 +392,7 @@ def cancelAppt(id):
         return jsonify({'error':'server error'}), 500
 
 
-@appt_bp.route('/completeAppt/<int:id>', methods=['PUTS'], strict_slashes=False)
+@appt_bp.route('/completeAppt/<int:id>', methods=['PUT'], strict_slashes=False)
 def completeAppt(id):
     """
     Complete an appointment
@@ -486,20 +472,17 @@ def getDocAppt():
         doctor_id = data.get('doctor_id')
         appointments = Appointments.query.filter_by(doctor_id=doctor_id).all()
 
-        docAppts = [
-                {'appointment_id' : appointment.id,
-                'appointment date' : datetime.strftime(appointment.date_of_appointment, '%Y-%m-%d'),
-                'doctor id' : appointment.doctor_id,
-                'patient id' : appointment.patient_id,
-                'time' : datetime.strftime(appointment.date_of_appointment, '%H:%M %p'),
-                'status' : appointment.status,
-                'notes' : appointment.notes,
-                } for appointment in appointments
+        docAppts = [{
+                        'appointment_id' : appointment.id,
+                        'appointment date' : datetime.strftime(appointment.date_of_appointment, '%Y-%m-%d'),
+                        'doctor id' : appointment.doctor_id,
+                        'patient id' : appointment.patient_id,
+                        'time id' : appointment.timeslot_id,
+                        'status' : appointment.status,
+                        'notes' : appointment.notes,
+                    } 
+                    for appointment in appointments
                 ]
-        
-        if not docAppt:
-            return jsonify({'status' : 'no appointments for this doctor'}), 200
-        
         return jsonify({'appointments' : docAppts}), 200
     
     except ValueError as e:
@@ -559,11 +542,13 @@ def addException():
         if data is None:
             raise ValueError('No valid JSON data provided')
 
-        doctor_id = date.get('doctor_id')
-        date_of_exception = data.get('date_of_exception')
+        doctor_id = data.get('doctor_id')
+        date_of_exception_str = data.get('date_of_exception')
 
-        if doctor_id is None or date_of_exception is None:
+        if doctor_id is None or date_of_exception_str is None:
             raise ValueError('doctor id and date of exception are required')
+
+        date_of_exception = datetime.strptime(date_of_exception_str, '%Y-%m-%d')
 
         exception = Exceptions(doctor_id=doctor_id,  date_of_exception=date_of_exception)
 
@@ -573,7 +558,10 @@ def addException():
         return jsonify({'status' : 'successfully created an exception'}), 200
     
     except ValueError as e:
-        return jsonify({'error':str(e)}), 400
+        return jsonify({'error': str(e)}), 400
+    except Exception as ex:
+        print(str(ex))
+        return jsonify({'error' : 'server error'}), 500
     
     except Exception as ex:
         db.session.rollback()
@@ -604,7 +592,7 @@ def getException(id):
             'exception id' : exception.id,
             'doctor id' : exception.doctor_id,
             'doctor name' : f'{doctor.first_name} {doctor.last_name} {doctor.other_name}',
-            'exception date' : datetime.isoformat(exception.date_of_exception.date())
+            'exception date' : datetime.strftime(exception.date_of_exception, '%Y-%m-%d')
             }), 200
 
     except ValueError as e:
@@ -635,7 +623,7 @@ def getExceptions():
         allExceptions = [{
                             'exception id' : exception.id,
                             'doctor id' : exception.doctor_id,
-                            'exception date' : exception.date_of_exception
+                            'exception date' : datetime.strftime(exception.date_of_exception, '%Y-%m-%d')
                         }
                         for exception in exceptions
                         ]

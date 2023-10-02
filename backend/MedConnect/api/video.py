@@ -33,6 +33,7 @@ def generateAddVideoToken(id):
     appt = Appointments.query.get(id)
     
     room_name = f"room_{appt.id}"
+    
     if not appt:
         return jsonify({'status': 'room not found'}), 200
     
@@ -41,11 +42,11 @@ def generateAddVideoToken(id):
 
     # Generate token
     token = AccessToken(twilio_account_sid, twilio_api_key_sid,
-            twilio_api_key_secret, identity=get_jwt_identity().id)
+            twilio_api_key_secret, identity=get_jwt_identity())
 
     token.add_grant(VideoGrant(room=room_name))
 
     return jsonify({
         'token': token.to_jwt(), 
-        'room': room_number
+        'room': room_name
         }), 200

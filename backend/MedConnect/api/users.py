@@ -12,17 +12,19 @@ from api.main import is_user
 from datetime import datetime, date
 from werkzeug.security import generate_password_hash, check_password_hash
 from api.models import Patients, Doctors, Healthcares, TimeSlots
-from flask_jwt_extended import jwt_required
-from api.auth import access_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
+# from api.auth import access_required
 
 users_bp = Blueprint('users', __name__)
 
 
 @users_bp.route("/regPatient", methods=["POST"], strict_slashes=False)
 def regPatient():
+    B
     """
     Register a new patient
     """
+    B
     try:
         data = request.get_json()
         email_address = data['email_address']
@@ -59,7 +61,7 @@ def regPatient():
 
 
 @users_bp.route("/getPatient/<int:id>", strict_slashes=False)
-#@jwt_required()
+@jwt_required()
 def getPatient(id):
     """
     Get a patient from the database
@@ -80,7 +82,9 @@ def getPatient(id):
 
 
 @users_bp.route("/getPatients", methods=['GET'], strict_slashes=False)
-#@jwt_required()
+# @access_required('healthcares')
+# @access_required('doctors')
+@jwt_required()
 def getPatients():
     patients = Patients.query.all()
     all_patients = []
@@ -101,7 +105,8 @@ def getPatients():
 
 
 @users_bp.route("/updatePatient/<int:id>", methods=["PUT"], strict_slashes=False)
-# @jwt_required()
+# @access_required('patients')
+@jwt_required()
 def updatePatient(id):
     """
     Updates patient record
@@ -136,6 +141,9 @@ def updatePatient(id):
 
 
 @users_bp.route("/getDoctors/<int:id>", methods=["GET"])
+# @access_required('healthcare')
+# @access_required('doctor')
+@jwt_required()
 def getDoctor(id):
     doctor = Doctors.query.get(id)
     if doctor:
@@ -157,8 +165,8 @@ def getDoctor(id):
     return jsonify({"message": "Doctor not found"}), 404
 
 @users_bp.route("/addDoctor", methods=["POST"], strict_slashes=False)
-# @access_required('admin')
-# @jwt_required()
+# @access_required('healthcare')
+@jwt_required()
 def addDoctor():
     data = request.get_json()
 
@@ -205,7 +213,8 @@ def addDoctor():
 
 
 @users_bp.route("/updateDoctor/<int:id>", methods=["PUT"], strict_slashes=False)
-# @jwt_required()
+# @access_required('doctor')
+@jwt_required()
 def updateDoctor(id): 
     doctor = Doctors.query.get(id)
     if not doctor:
@@ -229,7 +238,8 @@ def updateDoctor(id):
 
 
 @users_bp.route("/delDoctor/<int:id>", methods=["DELETE"], strict_slashes=False)
-# @jwt_required()
+# @access_required('healthcare')
+@jwt_required()
 def deleteDoctor(id):
     doctor = Doctors.query.get(id)
     if doctor:
@@ -241,7 +251,8 @@ def deleteDoctor(id):
 
 
 @users_bp.route('/getDoctors', methods=['GET'], strict_slashes=False)
-# @jwt_required()
+# @access_required('healthcare')
+@jwt_required()
 def getDoctors():
     try:
         doctors = Doctors.query.all()
@@ -270,6 +281,8 @@ def getDoctors():
 
 
 @users_bp.route("/registerHealthcare", methods=["POST"], strict_slashes=False)
+# @access_required('healthcare')
+@jwt_required()
 def regHealthcare():
     """
     Register a new patient
@@ -305,7 +318,8 @@ def regHealthcare():
 
 
 @users_bp.route("/getHealthcare/<int:id>", methods=['GET'], strict_slashes=False)
-# @jwt_required()
+# @access_required('healthcare')
+@jwt_required()
 def getHealthcare(id):
     """
     Get a patient from the database
@@ -323,7 +337,7 @@ def getHealthcare(id):
 
 
 @users_bp.route("/getHealthcares", methods=['GET'], strict_slashes=False)
-# @jwt_required()
+@jwt_required()
 def allHealthcares():
     healthcares = Healthcares.query.all()
     all_healthcares = []
@@ -339,7 +353,7 @@ def allHealthcares():
     return jsonify({'healthcare': all_healthcares}), 200
 
 @users_bp.route("/updateHealthcare/<int:id>", methods=["PUT"], strict_slashes=False)
-# @jwt_required()
+@jwt_required()
 def updateHealthcare(id):
     healthcare = Healthcares.query.get(id)
     if not healthcare:
@@ -359,7 +373,7 @@ def updateHealthcare(id):
 
 
 @users_bp.route("/delHealthcare/<int:id>", methods=["DELETE"], strict_slashes=False)
-# @jwt_required()
+@jwt_required()
 def delHealthcare(id):
     healthcare = Healthcares.query.get(id)
     if healthcare:
@@ -398,4 +412,5 @@ def getMe():
     except ValueError as ve:
         return jsonify({'error' : str(ve)}), 400
     except Exception as ex:
+        print(str(ex))
         return jsonify({'error' : 'request cannot be processed'}), 500
