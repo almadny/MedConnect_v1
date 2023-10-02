@@ -19,6 +19,7 @@ import DrBlog from './pages/DrDashboard/DrBlog';
 import Room from './pages/DrDashboard/Room';
 import PRoom from './pages/Dashboard/PRoom';
 import PostDetails from './pages/Blog/PostDetails'
+import Video from './pages/Video/Video';
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
               <Route path='dr_blog' element={<DrBlog/>}/>
               <Route path='room' element={<Room/>}/>
             </Route>
+            <Route path='Video_chat' element={<Video/>} />
           </Route>
         </Routes>
     </div>

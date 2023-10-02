@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 const Appointment = () => {
   const [appointment, setAppointment] = useState([]);
+  const [doctor, setDoctor] = useState([])
   const apptId = localStorage.getItem('appt_id')
 
   useEffect(() => {
@@ -16,9 +17,23 @@ const Appointment = () => {
       });
   }, []);
 
+  const docId = appointment.doctor_id
+  useEffect(() => {
+    fetch(`/api/users/getDoctors/${docId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setDoctor(data)
+        console.log(data)
+      })
+      .catch((error) => {
+        console.error('Error fetching appointment data:', error);
+      });
+  }, []);
+
+  const apiUrl = `/api/videoChat/generateAccessToken/${apptId}`
   const generateToken = () => {
-    fetch(`/generateAccessToken/${apptId}`, {
-      method: 'POST',
+    fetch(apiUrl, {
+      method: 'GET',
     })
       .then((response) => response.json())
       .then((data) => {
@@ -26,6 +41,9 @@ const Appointment = () => {
         
         console.log('Token:', token);
         console.log('Room:', room);
+
+        localStorage.setItem('video_token', data.token)
+        localStorage.setItem('room_number', data.room)
       })
       .catch((error) => {
         console.error('Error generating token:', error);
@@ -35,9 +53,9 @@ const Appointment = () => {
   return (
     <div className='mt-10 max-w-5xl mx-auto'>
       <ul>
-          <li key={appointment.appointment_id} className="flex justify-between mb-4 max-w-6xl mx-auto bg-white rounded shadow p-4">
+          <li className="flex justify-between mb-4 max-w-6xl mx-auto bg-white rounded shadow p-4">
             <div>
-              <p> {appointment.doctorName} - {appointment.hospital} ({appointment.specialty})</p>
+              <p> Dr. {doctor.first_name} {doctor.last_name}  {doctor.hospital}</p>
               <p>{appointment.time}</p>
             </div>
             <button
@@ -47,7 +65,6 @@ const Appointment = () => {
               Join Room
             </button>
           </li>
-        ))
       </ul>
     </div>
   );

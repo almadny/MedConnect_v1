@@ -14,7 +14,7 @@ twilio_api_key_secret = os.environ.get('TWILIO_API_KEY_SECRET')
 
 video_bp = Blueprint('video_bp', __name__)
 
-@video_bp.route('/generateAccessToken/<int:id>', methods=['POST', 'GET'], strict_slashes=False)
+@video_bp.route('/generateAccessToken/<int:id>', methods=['GET'], strict_slashes=False)
 @jwt_required()
 def generateAddVideoToken(id):
     """
@@ -32,12 +32,12 @@ def generateAddVideoToken(id):
 
     appt = Appointments.query.get(id)
     
-    # room_name = 'room_'.join(appt.id)
+    room_name = f"room_{appt.id}"
     if not appt:
         return jsonify({'status': 'room not found'}), 200
     
     # Add room id to appointments (Add room_name to appointments)
-    room_name = appt.room
+    # room_name = appt.room
 
     # Generate token
     token = AccessToken(twilio_account_sid, twilio_api_key_sid,
@@ -46,6 +46,6 @@ def generateAddVideoToken(id):
     token.add_grant(VideoGrant(room=room_name))
 
     return jsonify({
-        'token': token.to_jwt().decode(), 
+        'token': token.to_jwt(), 
         'room': room_number
         }), 200
