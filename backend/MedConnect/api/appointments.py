@@ -269,8 +269,8 @@ def availTimeSlots():
                         Appointments.status=='Scheduled'
                     ).all()
 
-            print(f"{doctorAppts}")
-            print(f"{date}")
+            # print(f"{doctorAppts}")
+            # print(f"{date}")
 
             # Get doctor with schedule information
             doctor = Doctors.query.get(timeSlot.doctor_id)
@@ -452,32 +452,36 @@ def getAppointment(id):
         return jsonify({'error': str(e)}), 400
 
 
-@appt_bp.route('/getDocAppts/', methods=['GET'], strict_slashes=False)
-def getDocAppt():
+@appt_bp.route('/getDocAppts/<int:doctor_id>', methods=['GET'], strict_slashes=False)
+def getDocAppt(doctor_id):
     """
     Get a doctors appointments
 
     Args:
-        id - Doctor's id
+        doctor_id - Doctor's id
 
     Return:
         List - list of dictionaries of a doctor's appointments
     """
     try:
-        data = request.get_json()
+        # data = request.get_json()
 
-        if data is None:
-            raise ValueError('No JSON data provided')
+        # if data is None:
+            # raise ValueError('No JSON data provided')
 
-        doctor_id = data.get('doctor_id')
+        # doctor_id = data.get('doctor_id')
+        doctor = Doctors.query.get(doctor_id)
+        if not doctor:
+            raise ValueError("Doctor does not exist")
+
         appointments = Appointments.query.filter_by(doctor_id=doctor_id).all()
 
         docAppts = [{
                         'appointment_id' : appointment.id,
-                        'appointment date' : datetime.strftime(appointment.date_of_appointment, '%Y-%m-%d'),
-                        'doctor id' : appointment.doctor_id,
-                        'patient id' : appointment.patient_id,
-                        'time id' : appointment.timeslot_id,
+                        'appointment_date' : datetime.strftime(appointment.date_of_appointment, '%Y-%m-%d'),
+                        'doctor_id' : appointment.doctor_id,
+                        'patient_id' : appointment.patient_id,
+                        'time_id' : appointment.timeslot_id,
                         'status' : appointment.status,
                         'notes' : appointment.notes,
                     } 
@@ -487,6 +491,9 @@ def getDocAppt():
     
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
+    except Exception as ex:
+        print(str(ex))
+        return jsonify({'error' : 'server error'}), 500
 
 
 @appt_bp.route('/getAllAppts/', methods=['GET'], strict_slashes=False)

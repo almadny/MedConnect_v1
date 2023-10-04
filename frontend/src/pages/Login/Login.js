@@ -3,6 +3,7 @@ import Logo from '../../components/Logo'
 import LoginImg from '../../assets/Login-image.jpg'
 import { useAuth } from '../../context/UseAuth'
 import { useNavigate } from 'react-router-dom'
+//import {AiOutlineEyeInvisible, AiOutlineEye} from 'react-icons/ai'
 
 const Login = () => {
 
@@ -40,7 +41,10 @@ const Login = () => {
     // }
     navigate('/')
   };
-
+  const [showPassword, setShowPasword] = useState(false)
+  const togglePassword = () => {
+        setShowPasword(prevState => !prevState);
+  }
 
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 h-screen w-full'>
@@ -65,7 +69,17 @@ const Login = () => {
           </div>
           <div className='flex flex-col text-slate-800 py-2'>
             <label>Password </label>
-            <input value={password} onChange={(e) => setPassword(e.target.value)} className='rounded-lg mt-2 p-2 focus:border-slate-300 focus:bg-slate-100' type="password"/>
+            <input value={password} onChange={(e) => setPassword(e.target.value)} className='rounded-lg mt-2 p-2 focus:border-slate-300 focus:bg-slate-100' type= "password"/>
+            {/* <button
+              onClick={togglePassword}
+              className="eyeIcon absolute top-1/2 transform -translate-y-1/2"
+            >
+              {showPassword ? (
+                <AiOutlineEyeInvisible className="text-black" />
+              ) : (
+                <AiOutlineEye className="text-black" />
+              )}
+            </button> */}
           </div>
           <div className='flex justify-between '>
             <p className='flex items-center'><input className='mr-2' type='checkbox'/>Remember me</p>

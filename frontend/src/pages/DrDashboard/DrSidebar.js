@@ -25,7 +25,7 @@ const DrSidebar = () => {
           <Logo />
         </div>
         <nav className="flex flex-col gap-12">
-          <div className="flex flex-col gap-0 justify-center">
+          <div className="flex flex-col justify-center">
             {NavData.slice(0, -1).map(({ name, link }, index) => {
                 return (
                   <NavLink

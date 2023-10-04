@@ -1,12 +1,13 @@
-import React, {useState, useEffect} from "react"
-import Video from 'twilio-video'
+import React, { useState, useEffect } from "react";
+import Video from 'twilio-video';
 import Participant from "./Participant";
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
-const Room = ({roomName, token, endCall}) => {
-  const [room, setRoom] = useState(null)
-  const [participants, setParticipants] = useState([])
+const Room = ({ roomName, token, endCall }) => {
+  const [room, setRoom] = useState(null);
+  const [participants, setParticipants] = useState([]);
 
-  
   const remoteParticipants = participants.map(participant => (
     <Participant key={participant.sid} participant={participant} />
   ));
@@ -44,23 +45,42 @@ const Room = ({roomName, token, endCall}) => {
   }, [roomName, token]);
 
   return (
-    <div className="room">
-      <h2>Room: {roomName}</h2>
-      <button onClick={endCall}>Log out</button>
-      <div className="local-participant">
-        {room ? (
-          <Participant
-          key={room.localParticipant.sid}
-          participant={room.localParticipant}
-        />
-        ) : (
-          ''
-        )}
+    <div className="h-screen flex flex-col justify-between">
+      <Header />
+
+      <div className="bg-slate-700 text-gray-300 text-3xl font-bold p-4">
+        Room: {roomName}
       </div>
-      <h3>Remote Participants</h3>
-      <div className="remote-participants">{remoteParticipants}</div>
+
+      <div className="relative flex-1 bg-gray-200">
+        {/* Remote Participants */}
+        <div className="absolute inset-0">
+          <h3 className="text-xl font-semibold p-4">Remote Participants</h3>
+          <div className="flex flex-wrap p-4 space-x-4 space-y-4">
+            {remoteParticipants}
+          </div>
+        </div>
+
+        {/* Local Participant Overlay */}
+        <div className="absolute bottom-4 right-4">
+          {room ? (
+            <Participant
+              key={room.localParticipant.sid}
+              participant={room.localParticipant}
+            />
+          ) : (
+            ''
+          )}
+        </div>
+      </div>
+      <button
+        onClick={endCall}
+        className="bg-red-500 text-white p-2 m-4 rounded-lg hover:bg-red-600"
+      >
+        End Call
+      </button>
     </div>
   );
 };
 
-export default Room
+export default Room;

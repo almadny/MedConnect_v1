@@ -34,7 +34,7 @@ const DashboardSidebar = () => {
                                 activeClassName="text-blue-500"
                                 className="text-slate-100 hover:text-blue-500 py-6 px-20 border-t-2"
                             >
-                                <span>{name}</span>
+                                <span classname= ''>{name}</span>
                             </NavLink>
                         );
                     })}

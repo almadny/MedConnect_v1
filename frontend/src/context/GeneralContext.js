@@ -5,10 +5,14 @@ const GeneralContext = createContext({});
 export const AuthProvider = ({ children }) => {
     const [isLoggedin, setIsLoggedIn] = useState(false);
     const [account, setAccount] = useState("");
+    const [JWT, setJWT] = useState("")
 
     const login = async (data) => {
       
       const account = data.user_type
+
+      setJWT(data.access_token)
+      console.log(JWT)
 
       localStorage.setItem("jwt-token", data.access_token);
       localStorage.setItem("account-type", account);
@@ -19,9 +23,7 @@ export const AuthProvider = ({ children }) => {
     };
     
     const logout = () => {
-      localStorage.removeItem('jwt-token');
-      localStorage.removeItem('account-type');
-      localStorage.removeItem("user_id");
+      localStorage.clear()
 
       setIsLoggedIn(false);
       setAccount('');

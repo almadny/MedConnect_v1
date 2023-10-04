@@ -29,7 +29,7 @@ const DashboardLayout = () => {
                 <section className='border-b-2 p-4'>
                     <div className="flex justify-between items-start">
                         <div className="">
-                            <h1 className='md:text-4xl font-bold'>Welcome,<br/> Abdulsamad Raji</h1>
+                            <h1 className='md:text-4xl font-bold'>Welcome,<br/> John Doe</h1>
                             <div className='md:text-xl'>
                                 <p>{displayTodaysDate}</p>
                             </div>

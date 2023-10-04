@@ -15,7 +15,7 @@ const FindADoctor = () => {
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
-          setAvailableDoctors(data.availSchedules);
+          setAvailableDoctors(data.availTimeSlots);
           console.log(availableDoctors)
           setIsLoading(false);
         })
